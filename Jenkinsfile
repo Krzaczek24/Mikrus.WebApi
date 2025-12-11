@@ -5,11 +5,18 @@ pipeline {
         registryCredential = 'dockerhub-credentials'
         dockerImage = 'omg'
     }
-    agent { dockerfile true }
+    agent {
+        dockerfile {
+            filename 'Dockerfile'
+            dir 'Krzaq.Mikrus.WebAPI'
+        }
+    }
     stages {
         stage('Debug') {
             steps {
+                echo '--- OMFG ---'
                 echo dockerImage
+                echo '------------'
             }
         }
         stage('Checkout') {
