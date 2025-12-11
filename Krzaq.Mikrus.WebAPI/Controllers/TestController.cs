@@ -7,7 +7,7 @@ namespace Krzaq.Mikrus.WebAPI.Controllers
     public class TestController : ControllerBase
     {
         [HttpGet]
-        public Task<Test> Test()
+        public Task<Test> GetTestObject()
         {
             var result = new Test
             {
@@ -19,8 +19,8 @@ namespace Krzaq.Mikrus.WebAPI.Controllers
 
         public class Test
         {
-            public int Key { get; set; }
-            public string Value { get; set; }
+            public required int Key { get; set; }
+            public required string Value { get; set; }
         }
     }
 }
