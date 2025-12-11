@@ -8,7 +8,9 @@ pipeline {
     agent { dockerfile true }
     stages {
         stage('Test') {
-            echo dockerImage
+            steps {
+                echo dockerImage
+            }
         }
         stage('Checkout') {
             steps {
