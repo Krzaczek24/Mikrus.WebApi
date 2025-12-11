@@ -1,34 +1,18 @@
 ARG DOTNET_VERSION=10.0
-ARG BUILD_CONFIGURATION=Release
 
 FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION} AS build
-WORKDIR /src
+WORKDIR /app
 
-RUN ls -alh
-
-COPY Krzaq.Mikrus.WebApi/*.csproj .
+COPY Krzaq.Mikrus.WebAPI/Krzaq.Mikrus.WebAPI.csproj .
 RUN dotnet restore
 
-RUN ls -alh
-
-COPY Krzaq.Mikrus.WebApi/. .
-RUN dotnet build --no-restore -c $BUILD_CONFIGURATION -o /build
-
-RUN ls -alh
-
-FROM build AS publish
-RUN dotnet publish -c $BUILD_CONFIGURATION -o /publish /p:UseAppHost=false
-
-RUN ls -alh
-
-FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}
-EXPOSE 80
-WORKDIR /publish
-
-RUN ls -alh
-
 COPY . .
+RUN dotnet publish -c Release -p:PublishDir=./output
 
-RUN ls -alh
+FROM mcr.microsoft.com/dotnet/core/aspnet:${DOTNET_VERSION} AS runtime
+WORKDIR /app
 
-ENTRYPOINT ["dotnet", "Krzaq.Mikrus.WebApi.dll"]
+COPY --from=build /app/output .
+
+EXPOSE 80
+ENTRYPOINT ["dotnet", "Krzaq.Mikrus.WebAPI.dll"]
