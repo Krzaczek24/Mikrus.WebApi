@@ -1,29 +1,34 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-# This stage is used when running from VS in fast mode (Default for Debug configuration)
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
-USER $APP_UID
-WORKDIR /app
-EXPOSE 80
-
-
-# This stage is used to build the service project
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+ARG DOTNET_VERSION=10.0
 ARG BUILD_CONFIGURATION=Release
+
+FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION} AS build
 WORKDIR /src
-COPY ["Krzaq.Mikrus.WebApi/Krzaq.Mikrus.WebApi.csproj", "Krzaq.Mikrus.WebApi/"]
-RUN dotnet restore "./Krzaq.Mikrus.WebApi/Krzaq.Mikrus.WebApi.csproj"
-COPY . .
-WORKDIR "/src/Krzaq.Mikrus.WebApi"
-RUN dotnet build "./Krzaq.Mikrus.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# This stage is used to publish the service project to be copied to the final stage
+RUN ls -alh
+
+COPY Krzaq.Mikrus.WebApi/*.csproj .
+RUN dotnet restore
+
+RUN ls -alh
+
+COPY Krzaq.Mikrus.WebApi/. .
+RUN dotnet build --no-restore -c $BUILD_CONFIGURATION -o /build
+
+RUN ls -alh
+
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Krzaq.Mikrus.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish -c $BUILD_CONFIGURATION -o /publish /p:UseAppHost=false
 
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
+RUN ls -alh
+
+FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}
+EXPOSE 80
+WORKDIR /publish
+
+RUN ls -alh
+
+COPY . .
+
+RUN ls -alh
+
 ENTRYPOINT ["dotnet", "Krzaq.Mikrus.WebApi.dll"]
