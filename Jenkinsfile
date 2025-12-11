@@ -3,10 +3,13 @@ pipeline {
         url = 'https://index.docker.io/v1/'
         registry = 'krzaczek24/krzaq.mikrus.webapi'
         registryCredential = 'dockerhub-credentials'
-        dockerImage = ''
+        dockerImage = 'omg'
     }
     agent { dockerfile true }
     stages {
+        stage('Test') {
+            echo dockerImage
+        }
         stage('Checkout') {
             steps {
                 checkout scm
