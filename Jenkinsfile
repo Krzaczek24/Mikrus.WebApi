@@ -1,15 +1,28 @@
 pipeline {
-    agent any
+    agent { dockerfile true }
     stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
         stage('Build') { 
             steps {
-                sh 'dotnet restore' 
-                sh 'dotnet build --no-restore' 
+                dockerImage = docker.build("krzaczek24/krzaq.mikrus.webapi:${env.BUILD_NUMBER}")
             }
         }
         stage('Test') {
             steps {
-                sh 'dotnet test --no-build --no-restore --collect "XPlat Code Coverage"' 
+                sh 'docker run --rm krzaczek24/krzaq.mikrus.webapi:${env.BUILD_NUMBER} ./run-tests.sh'
+            }
+        }
+        stage('Push') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
+                        dockerImage.push()
+                    }
+                }
             }
         }
         stage('Deploy') {
