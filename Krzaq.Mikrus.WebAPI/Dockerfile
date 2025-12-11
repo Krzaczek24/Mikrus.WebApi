@@ -9,7 +9,7 @@ RUN dotnet restore
 COPY . .
 RUN dotnet publish -c Release -p:PublishDir=./output
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:${DOTNET_VERSION} AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION} AS runtime
 WORKDIR /app
 
 COPY --from=build /app/output .
