@@ -7,7 +7,7 @@ COPY Krzaq.Mikrus.WebAPI.csproj .
 RUN dotnet restore
 
 COPY . .
-RUN dotnet publish -c Release -p:PublishDir=./output
+RUN dotnet publish Krzaq.Mikrus.WebAPI.csproj -a linux-x64 -c Release --no-restore -p:PublishDir=./output
 
 FROM mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION} AS runtime
 WORKDIR /app
