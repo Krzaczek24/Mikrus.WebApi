@@ -7,7 +7,7 @@ pipeline {
     }
     agent { dockerfile true }
     stages {
-        stage('Test') {
+        stage('Debug') {
             steps {
                 echo dockerImage
             }
