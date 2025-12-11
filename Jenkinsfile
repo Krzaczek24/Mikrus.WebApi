@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage('Debug') {
             steps {
-                echo '--- OMFG ---'
+                sh "echo '--- OMFG ---'"
                 echo dockerImage
                 echo '------------'
             }
