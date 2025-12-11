@@ -1,4 +1,10 @@
 pipeline {
+    environment {
+        url = 'https://index.docker.io/v1/'
+        registry = 'krzaczek24/krzaq.mikrus.webapi:' + env.BUILD_NUMBER
+        registryCredential = 'dockerhub-credentials'
+        dockerImage = ''
+    }
     agent { dockerfile true }
     stages {
         stage('Checkout') {
@@ -8,18 +14,18 @@ pipeline {
         }
         stage('Build') { 
             steps {
-                dockerImage = docker.build("krzaczek24/krzaq.mikrus.webapi:${env.BUILD_NUMBER}")
+                dockerImage = docker.build(registry)
             }
         }
         stage('Test') {
             steps {
-                sh 'docker run --rm krzaczek24/krzaq.mikrus.webapi:${env.BUILD_NUMBER} ./run-tests.sh'
+                sh 'docker run --rm ${registry} ./run-tests.sh'
             }
         }
         stage('Push') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
+                    docker.withRegistry(url, registryCredential) {
                         dockerImage.push()
                     }
                 }
