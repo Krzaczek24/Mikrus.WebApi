@@ -7,7 +7,7 @@ COPY ./Krzaq.Mikrus.WebAPI/Krzaq.Mikrus.WebAPI.csproj .
 RUN dotnet restore
 
 COPY . .
-RUN dotnet build -r linux-x64 -c Release --no-restore -o /app/build
+RUN dotnet build -c Release --no-restore -o /app/build
 
 FROM build AS publish
 RUN dotnet publish -c Release -o /app/publish --no-build /p:UseAppHost=false
