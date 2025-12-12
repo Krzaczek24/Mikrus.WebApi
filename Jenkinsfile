@@ -1,9 +1,9 @@
 pipeline {
+	agent any
     environment {
 		DOT_NET = '10.0'
         REGISTRY = 'krzaczek24/krzaq.mikrus.webapi'
     }
-	agent any
     stages {
         stage('Checkout') {
             steps {
@@ -19,12 +19,11 @@ pipeline {
 				}
 			}
             steps {
-                def image = docker.build("${env.REGISTRY}:${env.BUILD_NUMBER}")
-				image.push()
+				script {
+					def image = docker.build("${env.REGISTRY}:${env.BUILD_NUMBER}")
+					image.push()
+				}
             }
-        }
-        stage('Deploy') {
-            
         }
     }
 }
