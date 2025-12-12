@@ -1,8 +1,8 @@
 pipeline {
 	agent any
     environment {
+		DOCKER_IMAGE = 'krzaczek24/krzaq.mikrus.webapi'
 		DOT_NET = '10.0'
-        REGISTRY = 'krzaczek24/krzaq.mikrus.webapi'
     }
     stages {
         stage('Checkout') {
@@ -10,18 +10,16 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Docker') {
-			agent {
-				docker {
-					image "mcr.microsoft.com/dotnet/sdk:${env.DOT_NET}"
-					registryUrl 'https://index.docker.io/v1/'
-					registryCredentialsId = 'dockerhub-credentials'
-				}
-			}
+		stage('Build') {
+			steps {
+                sh "docker build -t ${DOCKER_IMAGE}:${BUILD_NUMBER} -t ${DOCKER_IMAGE}:latest ."
+            }
+		}
+        stage('Push') {
             steps {
-				script {
-					def image = docker.build("${env.REGISTRY}:${env.BUILD_NUMBER}")
-					image.push()
+				withDockerRegistry(credentialsId: 'dockerhub-credentials') {
+					sh "docker push ${DOCKER_IMAGE}:${BUILD_NUMBER}"
+					sh "docker push ${DOCKER_IMAGE}:latest"
 				}
             }
         }
