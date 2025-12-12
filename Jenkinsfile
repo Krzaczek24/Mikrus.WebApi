@@ -3,13 +3,7 @@ pipeline {
 		DOT_NET = '10.0'
         REGISTRY = 'krzaczek24/krzaq.mikrus.webapi'
     }
-	agent {
-		docker {
-			image "mcr.microsoft.com/dotnet/sdk:${env.DOT_NET}"
-			registryUrl 'https://index.docker.io/v1/'
-			registryCredentialsId = 'dockerhub-credentials'
-		}
-	}
+	agent any
     stages {
         stage('Checkout') {
             steps {
@@ -17,6 +11,13 @@ pipeline {
             }
         }
         stage('Docker') {
+			agent {
+				docker {
+					image "mcr.microsoft.com/dotnet/sdk:${env.DOT_NET}"
+					registryUrl 'https://index.docker.io/v1/'
+					registryCredentialsId = 'dockerhub-credentials'
+				}
+			}
             steps {
                 def image = docker.build("${env.REGISTRY}:${env.BUILD_NUMBER}")
 				image.push()
