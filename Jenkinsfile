@@ -1,58 +1,29 @@
 pipeline {
     environment {
-        url = 'https://index.docker.io/v1/'
-        registry = 'krzaczek24/krzaq.mikrus.webapi'
-        registryCredential = 'dockerhub-credentials'
-        dockerImage = 'omg'
+		DOT_NET = '10.0'
+        REGISTRY = 'krzaczek24/krzaq.mikrus.webapi'
     }
-    agent {
-        dockerfile {
-            filename 'Dockerfile'
-            dir 'Krzaq.Mikrus.WebAPI'
-        }
-    }
+	agent {
+		docker {
+			image "mcr.microsoft.com/dotnet/sdk:${env.DOT_NET}"
+			registryUrl 'https://index.docker.io/v1/'
+			registryCredentialsId = 'dockerhub-credentials'
+		}
+	}
     stages {
-        stage('Debug') {
-            steps {
-                sh "echo '--- OMFG ---'"
-                echo dockerImage
-                echo '------------'
-            }
-        }
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-        stage('Build') { 
+        stage('Docker') {
             steps {
-                echo "${registry}:${env.BUILD_NUMBER}"
-                //dockerImage = docker.build("${registry}:${env.BUILD_NUMBER}")
-            }
-        }
-        stage('Test') {
-            steps {
-                sh "docker run --rm ${registry}:${env.BUILD_NUMBER} ./run-tests.sh"
-            }
-        }
-        stage('Push') {
-            steps {
-                script {
-                    docker.withRegistry(url, registryCredential) {
-                        dockerImage.push()
-                    }
-                }
+                def image = docker.build("${env.REGISTRY}:${env.BUILD_NUMBER}")
+				image.push()
             }
         }
         stage('Deploy') {
-            steps {
-                sh 'dotnet publish --no-restore -o published'  
-            }
-            post {
-                success {
-                    archiveArtifacts 'published/*.*' 
-                }
-            }
+            
         }
     }
 }
