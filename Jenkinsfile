@@ -1,6 +1,7 @@
 pipeline {
 	agent any
     environment {
+		DOCKERFILE_PATH = ''
 		DOCKER_IMAGE = 'krzaczek24/krzaq.mikrus.webapi'
 		DOT_NET = '10.0'
     }
@@ -12,7 +13,7 @@ pipeline {
         }
 		stage('Build') {
 			steps {
-                sh "docker build -t ${DOCKER_IMAGE}:${BUILD_NUMBER} -t ${DOCKER_IMAGE}:latest ."
+                sh "docker build -f Krzaq.Mikrus.WebAPI/Dockerfile -t ${DOCKER_IMAGE}:${BUILD_NUMBER} -t ${DOCKER_IMAGE}:latest ."
             }
 		}
         stage('Push') {
