@@ -14,9 +14,10 @@ namespace Krzaq.Mikrus.WebAPI
 
             var app = builder.Build();
 
+            app.MapOpenApi();
+
             if (app.Environment.IsDevelopment())
             {
-                app.MapOpenApi();
                 app.UseSwaggerUI(opts => opts.SwaggerEndpoint(ENDPOINT, nameof(WebAPI)));
             }
 
