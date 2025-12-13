@@ -9,6 +9,12 @@ pipeline {
                 sh "docker pull ${DOCKER_IMAGE}:${IMAGE_TAG}"
             }
         }
+		stage('Stop') {
+			steps {
+				sh "docker ps"
+				//sh "docker stop <container id>"
+			}
+		}
 		stage('Run') {
 			steps {
                 sh "docker run --rm -d -p 8080:44538 ${DOCKER_IMAGE}:${IMAGE_TAG}"
