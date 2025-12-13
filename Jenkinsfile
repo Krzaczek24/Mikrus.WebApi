@@ -13,7 +13,7 @@ pipeline {
         }
 		stage('Build') {
 			steps {
-                sh "docker build --build-arg DOTNET=${DOT_NET} -f '${DOCKERFILE_PATH}' -t '${DOCKER_IMAGE}:${BUILD_NUMBER}' -t '${DOCKER_IMAGE}:latest' ."
+                sh "docker build --build-arg 'DOTNET=${DOT_NET}' -f '${DOCKERFILE_PATH}' -t '${DOCKER_IMAGE}:${BUILD_NUMBER}' -t '${DOCKER_IMAGE}:latest' ."
             }
 		}
         stage('Push') {

@@ -1,22 +1,18 @@
-ARG DOTNET
-ENV PROJECT=Krzaq.Mikrus.WebAPI.csproj
-
+ARG DOTNET=10.0
 FROM mcr.microsoft.com/dotnet/sdk:$DOTNET AS build
 WORKDIR /src
 
-COPY ./Krzaq.Mikrus.WebAPI/$PROJECT ./
-RUN ls -la
-RUN dotnet restore $PROJECT
+COPY ./Krzaq.Mikrus.WebAPI/Krzaq.Mikrus.WebAPI.csproj ./
+RUN dotnet restore Krzaq.Mikrus.WebAPI.csproj
 
 COPY . ./
 WORKDIR /src
-RUN ls -la
-RUN dotnet build $PROJECT -c Release --no-restore -o /app/build
+RUN dotnet build Krzaq.Mikrus.WebAPI.csproj -c Release --no-restore -o /app/build
 
 FROM build AS publish
-RUN ls -la
-RUN dotnet publish $PROJECT -c Release -o /app/publish --no-build /p:UseAppHost=false
+RUN dotnet publish Krzaq.Mikrus.WebAPI.csproj -c Release -o /app/publish --no-build /p:UseAppHost=false
 
+ARG DOTNET=10.0
 FROM mcr.microsoft.com/dotnet/aspnet:$DOTNET AS final
 WORKDIR /app
 
