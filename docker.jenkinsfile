@@ -1,22 +1,22 @@
 pipeline {
-	agent any
+    agent any
     environment {
-		DOCKERFILE_PATH = './Krzaq.Mikrus.WebAPI/Dockerfile'
-		DOCKER_IMAGE = 'krzaczek24/krzaq.mikrus.webapi'
-		DOT_NET = '10.0'
+        DOCKERFILE_PATH = './Krzaq.Mikrus.WebAPI/Dockerfile'
+        DOCKER_IMAGE = 'krzaczek24/krzaq.mikrus.webapi'
+        DOT_NET = '10.0'
     }
     stages {
-		stage('Build') {
-			steps {
+        stage('Build') {
+            steps {
                 sh "docker build --build-arg 'DOTNET=${DOT_NET}' -f '${DOCKERFILE_PATH}' -t '${DOCKER_IMAGE}:${BUILD_NUMBER}' -t '${DOCKER_IMAGE}:latest' ."
             }
-		}
+        }
         stage('Push') {
             steps {
-				withDockerRegistry(url: '', credentialsId: 'dockerhub-credentials') {
-					sh "docker push '${DOCKER_IMAGE}:${BUILD_NUMBER}'"
-					sh "docker push '${DOCKER_IMAGE}:latest'"
-				}
+                withDockerRegistry(url: '', credentialsId: 'dockerhub-credentials') {
+                    sh "docker push '${DOCKER_IMAGE}:${BUILD_NUMBER}'"
+                    sh "docker push '${DOCKER_IMAGE}:latest'"
+                }
             }
         }
     }
