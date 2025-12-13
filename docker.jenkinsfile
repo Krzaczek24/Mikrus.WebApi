@@ -6,11 +6,6 @@ pipeline {
 		DOT_NET = '10.0'
     }
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
 		stage('Build') {
 			steps {
                 sh "docker build --build-arg 'DOTNET=${DOT_NET}' -f '${DOCKERFILE_PATH}' -t '${DOCKER_IMAGE}:${BUILD_NUMBER}' -t '${DOCKER_IMAGE}:latest' ."
