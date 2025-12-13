@@ -13,7 +13,7 @@ pipeline {
             steps {
                 sh "docker stop WebAPI || true && \
                     docker wait WebAPI || true && \
-                    docker run --rm -d --name WebAPI -p 8080:44538 ${DOCKER_IMAGE}:${IMAGE_TAG}"
+                    docker run --rm -d --name WebAPI -p 44538:8080 ${DOCKER_IMAGE}:${IMAGE_TAG}"
             }
         }
     }
