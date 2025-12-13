@@ -3,11 +3,11 @@ FROM mcr.microsoft.com/dotnet/sdk:$DOTNET AS build
 WORKDIR /src
 
 COPY ./Krzaq.Mikrus.WebAPI/* WebAPI/
-RUN dotnet restore Krzaq.Mikrus.WebAPI.csproj
-RUN dotnet build Krzaq.Mikrus.WebAPI.csproj -c Release -o /app/build --no-restore
+RUN dotnet restore WebAPI/Krzaq.Mikrus.WebAPI.csproj
+RUN dotnet build WebAPI/Krzaq.Mikrus.WebAPI.csproj -c Release -o /app/build --no-restore
 
 FROM build AS publish
-RUN dotnet publish Krzaq.Mikrus.WebAPI.csproj -c Release -o /app/publish --no-build --no-restore /p:UseAppHost=false
+RUN dotnet publish WebAPI/Krzaq.Mikrus.WebAPI.csproj -c Release -o /app/publish --no-build --no-restore /p:UseAppHost=false
 
 ARG DOTNET=10.0
 FROM mcr.microsoft.com/dotnet/aspnet:$DOTNET AS final
