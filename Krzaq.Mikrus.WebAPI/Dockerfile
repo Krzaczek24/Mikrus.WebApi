@@ -8,6 +8,7 @@ RUN dotnet build WebAPI/Krzaq.Mikrus.WebAPI.csproj -c Release -o /app/build --no
 
 FROM build AS publish
 WORKDIR /src
+RUN ls -la
 RUN dotnet publish WebAPI/Krzaq.Mikrus.WebAPI.csproj -c Release -o /app/publish --no-build --no-restore /p:UseAppHost=false
 
 ARG DOTNET=10.0
