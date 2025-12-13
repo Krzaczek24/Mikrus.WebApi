@@ -4,9 +4,9 @@ WORKDIR /src
 
 COPY ./Krzaq.Mikrus.WebAPI/* WebAPI/
 RUN dotnet restore WebAPI/Krzaq.Mikrus.WebAPI.csproj
-RUN dotnet build WebAPI/Krzaq.Mikrus.WebAPI.csproj -c Release -o /app/build --no-restore
-RUN ls -la
+RUN dotnet build WebAPI/Krzaq.Mikrus.WebAPI.csproj -c Release --no-restore
 COPY ./Krzaq.Mikrus.WebApi/bin/* WebAPI/bin/
+RUN ls -la ./WebAPI
 
 FROM build AS publish
 WORKDIR /src
