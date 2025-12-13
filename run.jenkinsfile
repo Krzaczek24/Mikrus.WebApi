@@ -11,9 +11,9 @@ pipeline {
         }
         stage('Run') {
             steps {
-                sh "docker stop WebAPI && \
-                    docker wait WebAPI && \
-                    docker rm WebAPI && \
+                sh "docker stop WebAPI || true && \
+                    docker wait WebAPI || true && \
+                    docker rm WebAPI || true && \
                     docker run --rm -d --name WebAPI -p 8080:44538 ${DOCKER_IMAGE}:${IMAGE_TAG}"
             }
         }
