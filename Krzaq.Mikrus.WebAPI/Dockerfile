@@ -2,11 +2,11 @@ ARG DOTNET=10.0
 FROM mcr.microsoft.com/dotnet/sdk:$DOTNET AS build
 WORKDIR /src
 
-COPY ./Krzaq.Mikrus.WebAPI/Krzaq.Mikrus.WebAPI.csproj ./
-RUN dotnet restore Krzaq.Mikrus.WebAPI.csproj
+COPY ./Krzaq.Mikrus.WebAPI/Krzaq.Mikrus.WebAPI.csproj WebAPI/
+RUN dotnet restore WebAPI/Krzaq.Mikrus.WebAPI.csproj
 
-COPY . ./
-WORKDIR /src
+COPY . WebAPI/
+WORKDIR /src/WebAPI/
 RUN dotnet build Krzaq.Mikrus.WebAPI.csproj -c Release --no-restore -o /app/build
 
 FROM build AS publish
