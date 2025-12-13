@@ -7,6 +7,7 @@ RUN dotnet restore WebAPI/Krzaq.Mikrus.WebAPI.csproj
 
 COPY . WebAPI/
 WORKDIR /src/WebAPI/
+RUN ls -la
 RUN dotnet build Krzaq.Mikrus.WebAPI.csproj -c Release --no-restore -o /app/build
 
 FROM build AS publish
