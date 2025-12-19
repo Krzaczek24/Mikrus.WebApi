@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKER_IMAGE = 'krzaczek24/krzaq.mikrus.webapi'
-        DB_PASSWORD = credentials('mikrus-database').split(':')[1]
+        DB_PASSWORD = credentials('mikrus-database')
     }
     stages {
         stage('Pull') {
@@ -12,9 +12,9 @@ pipeline {
         }
         stage('Run') {
             steps {
-                sh "docker stop WebAPI || true && \
+                sh 'docker stop WebAPI || true && \
                     docker wait WebAPI || true && \
-                    docker run --rm -d --name WebAPI -p 44538:8080 $DOCKER_IMAGE:$IMAGE_TAG --db-password $DB_PASSWORD"
+                    docker run --rm -d --name WebAPI -p 44538:8080 $DOCKER_IMAGE:$IMAGE_TAG --db-password $DB_PASSWORD_PSW'
             }
         }
     }
