@@ -18,17 +18,6 @@ namespace Krzaq.Mikrus.WebAPI.Controllers
             return Task.FromResult(result);
         }
 
-        [HttpGet("config")]
-        public Task<JsonResult> GetConfig([FromServices] IDbConnectionStringProvider provider)
-        {
-            var result = new JsonResult(new
-            {
-                connectionString = provider.GetConnectionString()
-            });
-
-            return Task.FromResult(result);
-        }
-
         public class Test
         {
             public required int Key { get; set; }
