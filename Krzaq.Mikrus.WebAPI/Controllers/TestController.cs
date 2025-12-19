@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Krzaq.Mikrus.WebApi.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Krzaq.Mikrus.WebAPI.Controllers
 {
@@ -14,6 +15,17 @@ namespace Krzaq.Mikrus.WebAPI.Controllers
                 Key = 2137,
                 Value = "Tak było. Nie zmyślam."
             };
+            return Task.FromResult(result);
+        }
+
+        [HttpGet("config")]
+        public Task<JsonResult> GetConfig([FromServices] IDbConnectionStringProvider provider)
+        {
+            var result = new JsonResult(new
+            {
+                connectionString = provider.GetConnectionString()
+            });
+
             return Task.FromResult(result);
         }
 

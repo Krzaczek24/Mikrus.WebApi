@@ -1,0 +1,11 @@
+{
+    "database": {
+        "mikrus": {
+            "host": "srv10.mikr.us",
+            "port": 44537,
+            "user": "mikrus",
+            "password": "",
+            "schema": "mikrus"
+        }
+    }
+}
