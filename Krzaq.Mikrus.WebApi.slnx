@@ -1,4 +1,4 @@
 <Solution>
-  <Project Path="Krzaq.Mikrus.WebApi/Krzaq.Mikrus.WebApi.csproj" Id="202942ee-6d5e-4286-8813-7677eb3f6596" DisplayName="Krzaq.Mikrus.WebAPI" />
-	
+  <Project Path="Krzaq.Mikrus.Database/Krzaq.Mikrus.Database.csproj" Id="1b9fc6c0-6fb3-43c5-8849-ff1ef81cf709" />
+  <Project Path="Krzaq.Mikrus.WebApi/Krzaq.Mikrus.WebApi.csproj" Id="202942ee-6d5e-4286-8813-7677eb3f6596" />
 </Solution>

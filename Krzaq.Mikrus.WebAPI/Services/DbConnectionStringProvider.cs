@@ -13,7 +13,7 @@ namespace Krzaq.Mikrus.WebApi.Services
         public string GetConnectionString()
         {
             var cfg = config.Value;
-            return $"Host={cfg.Host}:{cfg.Port};Password={cfg.Password}";
+            return $"Server={cfg.Host};Port={cfg.Port};Uid={cfg.User};Pwd={cfg.Password};Database={cfg.Schema};";
         }
     }
 }

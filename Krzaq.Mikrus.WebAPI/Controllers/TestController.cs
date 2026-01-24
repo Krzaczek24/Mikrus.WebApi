@@ -1,27 +1,19 @@
-﻿using Krzaq.Mikrus.WebApi.Services;
+﻿using Krzaq.Mikrus.Database;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krzaq.Mikrus.WebAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class TestController : ControllerBase
+    public class TestController(MikrusDbContext db) : ControllerBase
     {
         [HttpGet]
-        public Task<Test> GetTestObject()
+        public async Task<object> TestDb()
         {
-            var result = new Test
-            {
-                Key = 2137,
-                Value = "Tak było. Nie zmyślam."
-            };
-            return Task.FromResult(result);
-        }
-
-        public class Test
-        {
-            public required int Key { get; set; }
-            public required string Value { get; set; }
+            var game = db.Games.FirstOrDefault();
+            return await Task.FromResult(new {
+                game?.Name
+            });
         }
     }
 }

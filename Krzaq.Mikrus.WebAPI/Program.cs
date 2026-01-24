@@ -1,6 +1,7 @@
+using Krzaq.Mikrus.Database;
 using Krzaq.Mikrus.WebApi.Core.Settings;
 using Krzaq.Mikrus.WebApi.Services;
-using System.Collections.Frozen;
+using Microsoft.EntityFrameworkCore;
 
 namespace Krzaq.Mikrus.WebAPI
 {
@@ -31,6 +32,12 @@ namespace Krzaq.Mikrus.WebAPI
 
             builder.Services.AddSingleton<IDbConnectionStringProvider, DbConnectionStringProvider>();
 
+            builder.Services.AddDbContext<MikrusDbContext>((sp, opts) =>
+            {
+                var connStringProvider = sp.GetRequiredService<IDbConnectionStringProvider>();
+                opts.UseMySQL(connStringProvider.GetConnectionString());
+            });
+
             builder.Services.AddControllers();
             builder.Services.AddOpenApi(DOC_NAME);
 
@@ -43,6 +50,7 @@ namespace Krzaq.Mikrus.WebAPI
                 app.UseSwaggerUI(opts => opts.SwaggerEndpoint(ENDPOINT, nameof(WebAPI)));
             }
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
