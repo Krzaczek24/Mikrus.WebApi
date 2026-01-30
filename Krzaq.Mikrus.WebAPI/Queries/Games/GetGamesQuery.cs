@@ -2,5 +2,8 @@
 
 namespace Krzaq.Mikrus.WebApi.Queries.Games
 {
-    public class GetGamesQuery : IRequest<IReadOnlyCollection<string>> { }
+    public record struct GetGamesQuery : IRequest<IReadOnlyCollection<string>>
+    {
+        public bool? Active { get; set; }
+    }
 }

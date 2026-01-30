@@ -1,16 +1,16 @@
-﻿using Krzaq.Mikrus.WebApi.Core.Errors;
+﻿using Krzaq.Exceptions.Http.Base;
+using Krzaq.Exceptions.Http.Error.Base;
+using Krzaq.Mikrus.WebApi.Core.Errors;
 using Krzaq.Mikrus.WebApi.Core.Extensions;
 using NLog;
 using System.Text;
 using System.Text.Json;
-using Krzaq.Exceptions.Http.Base;
-using Krzaq.Exceptions.Http.Error.Base;
 
 namespace Krzaq.Mikrus.WebApi.Core.Middlewares
 {
     public class LoggingMiddleware(RequestDelegate next)
     {
-        protected static NLog.ILogger Logger { get; } = LogManager.GetLogger("LoggingMiddleware");
+        protected static NLog.ILogger Logger { get; } = LogManager.GetLogger(nameof(LoggingMiddleware));
 
         public async Task Invoke(HttpContext httpContext)
         {
@@ -95,5 +95,10 @@ namespace Krzaq.Mikrus.WebApi.Core.Middlewares
                 Message = exception.Message
             });
         }
+    }
+
+    public static class MiddlewareHelper
+    {
+        public static IApplicationBuilder UseLoggingMiddleware(this IApplicationBuilder app) => app.UseMiddleware<LoggingMiddleware>();
     }
 }

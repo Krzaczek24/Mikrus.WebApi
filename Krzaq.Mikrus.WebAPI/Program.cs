@@ -1,7 +1,12 @@
+using Krzaq.Extensions.String.Notation;
 using Krzaq.Mikrus.Database;
+using Krzaq.Mikrus.Database.Settings;
+using Krzaq.Mikrus.WebApi.Core.Authorization;
 using Krzaq.Mikrus.WebApi.Core.Extensions;
-using Krzaq.Mikrus.WebApi.Core.Settings;
-using Microsoft.EntityFrameworkCore;
+using Krzaq.Mikrus.WebApi.Core.Middlewares;
+using Microsoft.IdentityModel.Tokens;
+using NLog.Extensions.Logging;
+using System.Text;
 
 namespace Krzaq.Mikrus.WebAPI
 {
@@ -9,6 +14,12 @@ namespace Krzaq.Mikrus.WebAPI
     {
         private const string DOC_NAME = "swagger";
         public const string ENDPOINT = $"/openapi/{DOC_NAME}.json";
+
+#if DEBUG
+        public const bool IS_DEBUG = true;
+#else
+        public const bool IS_DEBUG = false;
+#endif
 
         public static void Main(string[] args)
         {
@@ -24,21 +35,42 @@ namespace Krzaq.Mikrus.WebAPI
             {
                 builder.Configuration.AddCommandLine(args, new Dictionary<string, string>
                 {
-                    ["--db-password"] = "database:mikrus:password"
+                    ["--db-password"] = "database:mikrus:password",
+                    ["--api-key"] = "apikey",
                 });
             }
 
+            /*
+            x => {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }
+            */
+
+            builder.Services.AddAuthentication().AddJwtBearer(x => {
+                string keyStr = builder.Configuration.GetValue<string>("apikey")!;
+                byte[] keyBytes = Encoding.ASCII.GetBytes(keyStr);
+                var key = new SymmetricSecurityKey(keyBytes);
+
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.MapInboundClaims = false;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = key,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    //RoleClaimType = UserClaim.Role.ToString().ToCamelCase(),
+                    NameClaimType = UserClaim.DisplayName.ToString().ToCamelCase()
+                };
+            });
+
             builder.Services.Configure<DatabaseConfig>(builder.Configuration.GetSection("database:mikrus"));
 
-            builder.Services.AddSingleton<IDbConnectionStringProvider, DbConnectionStringProvider>();
+            builder.Services.AddAppDatabase(IS_DEBUG ? new LoggerFactory([new NLogLoggerProvider()]) : null);
 
             builder.Services.AddMediator().AddHandlers();
-
-            builder.Services.AddDbContext<MikrusDbContext>((sp, opts) =>
-            {
-                var connStringProvider = sp.GetRequiredService<IDbConnectionStringProvider>();
-                opts.UseMySQL(connStringProvider.GetConnectionString());
-            });
 
             builder.Services.AddControllers();
             builder.Services.AddOpenApi(DOC_NAME);
@@ -51,6 +83,8 @@ namespace Krzaq.Mikrus.WebAPI
             {
                 app.UseSwaggerUI(opts => opts.SwaggerEndpoint(ENDPOINT, nameof(WebAPI)));
             }
+
+            app.UseLoggingMiddleware();
 
             app.UseAuthentication();
             app.UseAuthorization();

@@ -1,11 +1,12 @@
-﻿using Krzaq.Mikrus.WebAPI;
+﻿using Krzaq.Mikrus.WebApi.Core.Controllers;
+using Krzaq.Mikrus.WebAPI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krzaq.Mikrus.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class IndexController : ControllerBase
+    public class IndexController : ApiController
     {
         [HttpGet("/")]
         [ApiExplorerSettings(IgnoreApi = true)]
