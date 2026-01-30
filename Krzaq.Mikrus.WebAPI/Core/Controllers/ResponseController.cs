@@ -2,7 +2,7 @@
 using Krzaq.Mikrus.WebApi.Core.Errors;
 using System.Net;
 
-namespace Krzaq.Mikrus.WebApi.Core.Base
+namespace Krzaq.Mikrus.WebApi.Core.Controllers
 {
     [ProducesResponse(HttpStatusCode.OK)]
     [ProducesResponse<ErrorResponse>(HttpStatusCode.BadRequest)]

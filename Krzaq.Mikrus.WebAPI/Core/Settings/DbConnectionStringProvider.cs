@@ -1,7 +1,6 @@
-﻿using Krzaq.Mikrus.WebApi.Core.Settings;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 
-namespace Krzaq.Mikrus.WebApi.Services
+namespace Krzaq.Mikrus.WebApi.Core.Settings
 {
     public interface IDbConnectionStringProvider
     {

@@ -1,6 +1,6 @@
 using Krzaq.Mikrus.Database;
+using Krzaq.Mikrus.WebApi.Core.Extensions;
 using Krzaq.Mikrus.WebApi.Core.Settings;
-using Krzaq.Mikrus.WebApi.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Krzaq.Mikrus.WebAPI
@@ -31,6 +31,8 @@ namespace Krzaq.Mikrus.WebAPI
             builder.Services.Configure<DatabaseConfig>(builder.Configuration.GetSection("database:mikrus"));
 
             builder.Services.AddSingleton<IDbConnectionStringProvider, DbConnectionStringProvider>();
+
+            builder.Services.AddMediator().AddHandlers();
 
             builder.Services.AddDbContext<MikrusDbContext>((sp, opts) =>
             {

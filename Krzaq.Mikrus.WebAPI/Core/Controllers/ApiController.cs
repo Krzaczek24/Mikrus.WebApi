@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NLog;
 
-namespace Krzaq.Mikrus.WebApi.Core.Base
+namespace Krzaq.Mikrus.WebApi.Core.Controllers
 {
     [ApiExplorerSettings(GroupName = ControllerGroup.Api)]
     public abstract class ApiController : ControllerBase

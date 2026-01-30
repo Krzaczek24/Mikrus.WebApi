@@ -1,19 +1,17 @@
-﻿using Krzaq.Mikrus.Database;
+﻿using Krzaq.Mikrus.WebApi.Core.Mediators;
+using Krzaq.Mikrus.WebApi.Queries.Games;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krzaq.Mikrus.WebAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class TestController(MikrusDbContext db) : ControllerBase
+    public class TestController(IMediator mediator) : ControllerBase
     {
         [HttpGet]
-        public async Task<object> TestDb()
+        public async Task<JsonResult> TestDb()
         {
-            var game = db.Games.FirstOrDefault();
-            return await Task.FromResult(new {
-                game?.Name
-            });
+            return new JsonResult(await mediator.Send(new GetGamesQuery()));
         }
     }
 }
