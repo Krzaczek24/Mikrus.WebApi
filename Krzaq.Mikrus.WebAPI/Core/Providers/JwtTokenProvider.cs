@@ -1,17 +1,23 @@
 ﻿using Krzaq.Extensions.String.Notation;
-using Krzaq.Mikrus.WebApi.Shared.Constants;
+using Krzaq.Mikrus.Database.Models;
+using Krzaq.Mikrus.WebApi.Core.Authorization;
+using Krzaq.Mikrus.WebApi.Core.Constants;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
-using System.Text;
 
-namespace Krzaq.Mikrus.WebApi.Core.Authorization.Token
+namespace Krzaq.Mikrus.WebApi.Core.Providers
 {
-    public class TokenBuilder(string key)
+    public interface IJwtTokenPovider
+    {
+        string GenerateAccessToken(UserDto user);
+        string GenerateRefreshToken(out DateTime? validUntil);
+        bool IsRefreshTokenValid(string refreshToken);
+    }
+
+    internal class JwtTokenProvider(IApiKeyProvider keyProvider) : IJwtTokenPovider
     {
         private const string DATE_FORMAT = StringFormats.Dates.ISO_8601;
-
-        private SymmetricSecurityKey Key { get; } = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));
 
         public string GenerateAccessToken(UserDto user)
         {
@@ -25,7 +31,7 @@ namespace Krzaq.Mikrus.WebApi.Core.Authorization.Token
                 //new CustomClaim(UserClaim.Role, user.Role.ToString().ToUpper()),
                 //new CustomClaim(UserClaim.FirstName, user.FirstName ?? string.Empty),
                 //new CustomClaim(UserClaim.LastName, user.LastName ?? string.Empty),
-                new CustomClaim(UserClaim.CreatedAt, user.CreatedAt.ToString(DATE_FORMAT)),
+                new CustomClaim(UserClaim.CreatedAt, user.CreateDate.ToString(DATE_FORMAT)),
                 new CustomClaim(UserClaim.CurrentLoginDate, now.ToString(DATE_FORMAT)),
                 new CustomClaim(UserClaim.LastLoginDate, user.LastLogin?.ToString(DATE_FORMAT) ?? string.Empty),
             };
@@ -44,7 +50,7 @@ namespace Krzaq.Mikrus.WebApi.Core.Authorization.Token
 #else
                 Expires = now.Add(TimeSpan.FromMinutes(5)),
 #endif
-                SigningCredentials = new SigningCredentials(Key, SecurityAlgorithms.HmacSha512Signature),
+                SigningCredentials = new SigningCredentials(keyProvider.GetApiKey(), SecurityAlgorithms.HmacSha512Signature),
             };
             var tokenHandler = new JsonWebTokenHandler();
             return tokenHandler.CreateToken(tokenDescriptor);
@@ -58,13 +64,13 @@ namespace Krzaq.Mikrus.WebApi.Core.Authorization.Token
             {
                 IssuedAt = now,
                 Expires = validUntil = now.Add(TimeSpan.FromDays(7)),
-                SigningCredentials = new SigningCredentials(Key, SecurityAlgorithms.HmacSha512Signature),
+                SigningCredentials = new SigningCredentials(keyProvider.GetApiKey(), SecurityAlgorithms.HmacSha512Signature),
             };
             var tokenHandler = new JsonWebTokenHandler();
             return tokenHandler.CreateToken(tokenDescriptor);
         }
 
-        public static bool IsRefreshTokenValid(string refreshToken)
+        public bool IsRefreshTokenValid(string refreshToken)
         {
             var tokenHandler = new JsonWebTokenHandler();
 

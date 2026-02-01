@@ -3,6 +3,7 @@ using Krzaq.Mikrus.Database.Entities.Game;
 using Krzaq.Mikrus.Database.Entities.Room;
 using Krzaq.Mikrus.Database.Entities.RoomChat;
 using Krzaq.Mikrus.Database.Entities.User;
+using Krzaq.Mikrus.Database.Entities.UserSerssions;
 using Krzaq.Mikrus.Database.Entities.UserStats;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,7 @@ namespace Krzaq.Mikrus.Database
         public virtual DbSet<DbRoom> Rooms { get; set; }
         public virtual DbSet<DbRoomChat> RoomChats { get; set; }
         public virtual DbSet<DbUser> Users { get; set; }
+        public virtual DbSet<DbUserSession> UserSessions { get; set; }
         public virtual DbSet<DbUserStats> UserStats { get; set; }
 
         //public override sealed int SaveChanges()

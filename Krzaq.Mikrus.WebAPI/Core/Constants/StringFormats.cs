@@ -1,4 +1,4 @@
-﻿namespace Krzaq.Mikrus.WebApi.Shared.Constants
+﻿namespace Krzaq.Mikrus.WebApi.Core.Constants
 {
     public static class StringFormats
     {

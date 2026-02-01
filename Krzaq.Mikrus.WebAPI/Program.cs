@@ -4,6 +4,7 @@ using Krzaq.Mikrus.Database.Settings;
 using Krzaq.Mikrus.WebApi.Core.Authorization;
 using Krzaq.Mikrus.WebApi.Core.Extensions;
 using Krzaq.Mikrus.WebApi.Core.Middlewares;
+using Krzaq.Mikrus.WebApi.Core.Providers;
 using Microsoft.IdentityModel.Tokens;
 using NLog.Extensions.Logging;
 using System.Text;
@@ -47,10 +48,11 @@ namespace Krzaq.Mikrus.WebAPI
             }
             */
 
+            builder.Services.AddTransient<IApiKeyProvider, ApiKeyProvider>();
+            builder.Services.AddTransient<IJwtTokenPovider, JwtTokenProvider>();
+
             builder.Services.AddAuthentication().AddJwtBearer(x => {
-                string keyStr = builder.Configuration.GetValue<string>("apikey")!;
-                byte[] keyBytes = Encoding.ASCII.GetBytes(keyStr);
-                var key = new SymmetricSecurityKey(keyBytes);
+                var keyProvider = new ApiKeyProvider(builder.Configuration);
 
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
@@ -58,7 +60,7 @@ namespace Krzaq.Mikrus.WebAPI
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = key,
+                    IssuerSigningKey = keyProvider.GetApiKey(),
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     //RoleClaimType = UserClaim.Role.ToString().ToCamelCase(),
@@ -66,11 +68,13 @@ namespace Krzaq.Mikrus.WebAPI
                 };
             });
 
+            builder.Services.AddHttpContextAccessor();
+
             builder.Services.Configure<DatabaseConfig>(builder.Configuration.GetSection("database:mikrus"));
 
             builder.Services.AddAppDatabase(IS_DEBUG ? new LoggerFactory([new NLogLoggerProvider()]) : null);
 
-            builder.Services.AddMediator().AddHandlers();
+            builder.Services.AddMediator().AddHandlers().AddValidators();
 
             builder.Services.AddControllers();
             builder.Services.AddOpenApi(DOC_NAME);

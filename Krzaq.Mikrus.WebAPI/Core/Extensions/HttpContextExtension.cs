@@ -1,7 +1,12 @@
-﻿namespace Krzaq.Mikrus.WebApi.Core.Extensions
+﻿using System.Security.Claims;
+
+namespace Krzaq.Mikrus.WebApi.Core.Extensions
 {
     public static class HttpContextExtension
     {
+        public static ClaimsPrincipal? GetUser(this IHttpContextAccessor contextAccessor) => contextAccessor.HttpContext?.User;
+
+        public static string? GetClientIp(this IHttpContextAccessor contextAccessor) => contextAccessor.HttpContext?.GetClientIp();
         public static string? GetClientIp(this HttpContext context)
         {
             return context.Connection.RemoteIpAddress?.ToString();

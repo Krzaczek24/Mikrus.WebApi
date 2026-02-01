@@ -10,8 +10,8 @@ namespace Krzaq.Mikrus.WebApi.Core.Errors
         Unknown,
         [Description("At least one of request fields is invalid")]
         InvalidRequestFieldValue,
-        [Description("Selected username is already used")]
-        UsernameAlreadyTaken,
+        [Description("Selected login is already used")]
+        LoginAlreadyInUse,
         [Description("Resource has been not found")]
         ResourceNotFound,
         [Description("Already exists resource with that name")]
@@ -20,6 +20,8 @@ namespace Krzaq.Mikrus.WebApi.Core.Errors
         ResourceInUse,
         [Description("Already exists such relation")]
         NonUniqueRelation,
+        [Description("Provided login or pasword is invalid")]
+        InvalidLoginOrPassword,
         [Description("Failed to authorize")]
         Unauthorized,
         [Description("Insufficient permissions")]

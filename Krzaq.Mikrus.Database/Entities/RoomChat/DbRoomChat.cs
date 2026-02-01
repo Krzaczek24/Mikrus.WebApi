@@ -4,7 +4,7 @@ using Krzaq.Mikrus.Database.Entities.User;
 
 namespace Krzaq.Mikrus.Database.Entities.RoomChat
 {
-    public class DbRoomChat : DbTable
+    internal class DbRoomChat : DbTable
     {
         public virtual DbUser User { get; set; }
         public virtual DbRoom Room { get; set; }

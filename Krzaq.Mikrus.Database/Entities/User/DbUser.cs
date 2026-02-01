@@ -2,7 +2,7 @@
 
 namespace Krzaq.Mikrus.Database.Entities.User
 {
-    public class DbUser : DbTable
+    internal class DbUser : DbTable
     {
         public virtual string Login { get; set; }
         public virtual string DisplayName { get; set; }

@@ -46,7 +46,7 @@ namespace Krzaq.Mikrus.WebApi.Core.Middlewares
                 httpContext.Response.StatusCode = (int)ex.StatusCode;
                 await HandleException(httpContext, ex);
             }
-            catch (Exception exception)
+            catch (System.Exception exception)
             {
                 httpContext.Response.StatusCode = 500;
                 await HandleException(httpContext, exception);
@@ -59,7 +59,7 @@ namespace Krzaq.Mikrus.WebApi.Core.Middlewares
             await responseBody.CopyToAsync(originalBodyStream);
         }
 
-        protected virtual async Task HandleException(HttpContext httpContext, Exception exception)
+        protected virtual async Task HandleException(HttpContext httpContext, System.Exception exception)
         {
             LogException(httpContext, exception);
             httpContext.Response.ContentType = "application/json";
@@ -76,7 +76,7 @@ namespace Krzaq.Mikrus.WebApi.Core.Middlewares
             Logger.Info($"RESPONSE ({httpContext.GetRequestId()}) | CODE ({httpContext.Response.StatusCode}) | BODY ({bodyText})");
         }
 
-        protected virtual void LogException(HttpContext httpContext, Exception exception)
+        protected virtual void LogException(HttpContext httpContext, System.Exception exception)
         {
             if (httpContext.Response.StatusCode >= 500)
             {
@@ -84,7 +84,7 @@ namespace Krzaq.Mikrus.WebApi.Core.Middlewares
             }
         }
 
-        protected virtual object GetErrorResponse(Exception exception)
+        protected virtual object GetErrorResponse(System.Exception exception)
         {
             if (exception is HttpErrorException<ErrorModel> ex)
                 return new ErrorResponse(ex.Errors);

@@ -6,24 +6,24 @@ using Krzaq.Mikrus.WebApi.Core.Extensions;
 using Krzaq.Mikrus.WebApi.Core.Mediators;
 using Krzaq.Mikrus.WebApi.Core.Providers;
 
-namespace Krzaq.Mikrus.WebApi.Commands.Authentication.SignIn
+namespace Krzaq.Mikrus.WebApi.Commands.Authentication.RefreshToken
 {
-    public class SignInCommandHandler(
+    public class RefreshTokenCommandHandler(
         IHttpContextAccessor httpContextAccessor,
         IJwtTokenPovider tokenProvider,
         IDbUserAccess userAccess,
         IDbUserSessionAccess userSessionAccess)
-        : IRequestHandler<SignInCommand, SignInCommandResult>
+        : IRequestHandler<RefreshTokenCommand, RefreshTokenCommandResult>
     {
-        public async ValueTask<SignInCommandResult> Handle(SignInCommand request)
+        public async ValueTask<RefreshTokenCommandResult> Handle(RefreshTokenCommand request)
         {
-            var (login, password) = request;
+            string token = request.RefreshToken;
 
-            if (!await userAccess.IsUserDataCorrect(login, password))
-                throw new UnauthorizedException(ErrorCode.InvalidLoginOrPassword);
+            if (!tokenProvider.IsRefreshTokenValid(token))
+                throw new UnauthorizedException(ErrorCode.TokenExpired);
 
-            await userAccess.UpdateLastLoginDate(login);
-            var user = (await userAccess.GetUser(login)).Value;
+            var user = await userAccess.GetUser(token, httpContextAccessor.GetClientIp())
+                ?? throw new UnauthorizedException(ErrorCode.TokenInvalid);
 
             string refreshToken = tokenProvider.GenerateRefreshToken(out DateTime? validUntil);
             string? clientIp = httpContextAccessor.GetClientIp();

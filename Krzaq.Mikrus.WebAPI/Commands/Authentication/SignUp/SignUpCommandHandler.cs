@@ -1,12 +1,23 @@
-﻿using Krzaq.Mikrus.WebApi.Core.Mediators;
+﻿using Krzaq.Mikrus.Database.Entities.User;
+using Krzaq.Mikrus.WebApi.Core.Errors;
+using Krzaq.Mikrus.WebApi.Core.Exception;
+using Krzaq.Mikrus.WebApi.Core.Mediators;
 
 namespace Krzaq.Mikrus.WebApi.Commands.Authentication.SignUp
 {
-    public class SignUpCommandHandler : IHandler<SignUpCommand, SignUpCommandResult>
+    public class SignUpCommandHandler(
+        IDbUserAccess userAccess)
+        : IRequestHandler<SignUpCommand, SignUpCommandResult>
     {
-        public ValueTask<SignUpCommandResult> Handle(SignUpCommand request)
+        public async ValueTask<SignUpCommandResult> Handle(SignUpCommand request)
         {
-            throw new NotImplementedException();
+            var (login, displayName, password) = request;
+
+            if (await userAccess.DoesUserExist(login))
+                throw new ConflictException(ErrorCode.LoginAlreadyInUse);
+
+            var user = await userAccess.CreateUser(login, displayName, password);
+            return new(user);
         }
     }
 }

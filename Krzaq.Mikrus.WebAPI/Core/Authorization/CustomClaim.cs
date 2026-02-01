@@ -1,7 +1,7 @@
 ﻿using Krzaq.Extensions.String.Notation;
 using System.Security.Claims;
 
-namespace Krzaq.Mikrus.WebApi.Core.Authorization.Token
+namespace Krzaq.Mikrus.WebApi.Core.Authorization
 {
     public class CustomClaim : Claim
     {

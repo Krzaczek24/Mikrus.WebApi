@@ -4,7 +4,7 @@ using Krzaq.Mikrus.Database.Entities.User;
 
 namespace Krzaq.Mikrus.Database.Entities.Room
 {
-    public class DbRoom : DbTable
+    internal class DbRoom : DbTable
     {
         public virtual DbUser Owner { get; set; }
         public virtual DbGame Game { get; set; }

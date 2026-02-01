@@ -1,4 +1,6 @@
-﻿using Krzaq.Mikrus.Database.Entities.User;
+﻿using Krzaq.Mikrus.Database.Entities.Game;
+using Krzaq.Mikrus.Database.Entities.User;
+using Krzaq.Mikrus.Database.Entities.UserSerssions;
 using Krzaq.Mikrus.Database.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +33,8 @@ namespace Krzaq.Mikrus.Database
 
         public static IServiceCollection AddAppDbAccesses(this IServiceCollection services)
             => services
-                .AddTransient<IDbUserAccess, DbUserAccess>();
+                .AddTransient<IDbGameAccess, DbGameAccess>()
+                .AddTransient<IDbUserAccess, DbUserAccess>()
+                .AddTransient<IDbUserSessionAccess, DbUserSessionAccess>();
     }
 }
