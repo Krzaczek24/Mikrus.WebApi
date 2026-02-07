@@ -21,7 +21,7 @@ namespace Krzaq.Mikrus.Database.Entities.UserSerssions
                 .HasMaxLength(15);
 
             builder.Property(e => e.ValidUntil)
-                .HasColumnName("password")
+                .HasColumnName("valid_until")
                 .IsRequired()
                 .HasMaxLength(3);
 

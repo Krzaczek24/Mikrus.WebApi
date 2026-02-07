@@ -17,13 +17,11 @@ namespace Krzaq.Mikrus.WebApi.Commands.Authentication.SignIn
     {
         public async ValueTask<SignInCommandResult> Handle(SignInCommand request)
         {
-            var (login, password) = request;
-
-            if (!await userAccess.IsUserDataCorrect(login, password))
+            if (!await userAccess.IsUserDataCorrect(request.Login, request.Password))
                 throw new UnauthorizedException(ErrorCode.InvalidLoginOrPassword);
 
-            await userAccess.UpdateLastLoginDate(login);
-            var user = (await userAccess.GetUser(login)).Value;
+            await userAccess.UpdateLastLoginDate(request.Login);
+            var user = (await userAccess.GetUser(request.Login)).Value;
 
             string refreshToken = tokenProvider.GenerateRefreshToken(out DateTime? validUntil);
             string? clientIp = httpContextAccessor.GetClientIp();
@@ -31,7 +29,11 @@ namespace Krzaq.Mikrus.WebApi.Commands.Authentication.SignIn
             string accessToken = tokenProvider.GenerateAccessToken(user);
             await saveRefreshTokenTask;
 
-            return new(accessToken, refreshToken);
+            return new()
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken,
+            };
         }
     }
 }

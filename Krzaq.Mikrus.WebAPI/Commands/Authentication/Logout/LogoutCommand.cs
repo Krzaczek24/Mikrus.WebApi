@@ -2,7 +2,8 @@
 
 namespace Krzaq.Mikrus.WebApi.Commands.Authentication.Logout
 {
-    public readonly record struct LogoutCommand(
-        bool AllMachines)
-        : IRequest<LogoutCommandResult>;
+    public class LogoutCommand : IRequest<LogoutCommandResult>
+    {
+        public bool AllMachines { get; init; }
+    }
 }

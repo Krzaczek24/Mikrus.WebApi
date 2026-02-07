@@ -31,7 +31,11 @@ namespace Krzaq.Mikrus.WebApi.Commands.Authentication.RefreshToken
             string accessToken = tokenProvider.GenerateAccessToken(user);
             await saveRefreshTokenTask;
 
-            return new(accessToken, refreshToken);
+            return new()
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken,
+            };
         }
     }
 }

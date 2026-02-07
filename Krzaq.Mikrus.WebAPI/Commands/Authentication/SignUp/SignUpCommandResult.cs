@@ -2,5 +2,8 @@
 
 namespace Krzaq.Mikrus.WebApi.Commands.Authentication.SignUp
 {
-    public readonly record struct SignUpCommandResult(UserDto User);
+    public class SignUpCommandResult
+    {
+        public required UserDto User { get; init; }
+    }
 }

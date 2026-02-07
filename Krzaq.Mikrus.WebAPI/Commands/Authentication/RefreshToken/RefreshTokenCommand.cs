@@ -2,7 +2,8 @@
 
 namespace Krzaq.Mikrus.WebApi.Commands.Authentication.RefreshToken
 {
-    public readonly record struct RefreshTokenCommand(
-        string RefreshToken)
-        : IRequest<RefreshTokenCommandResult>;
+    public class RefreshTokenCommand : IRequest<RefreshTokenCommandResult>
+    {
+        public string RefreshToken { get; init; } = string.Empty;
+    }
 }

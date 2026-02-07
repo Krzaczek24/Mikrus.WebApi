@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Krzaq.Mikrus.WebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("auth")]
     public class AuthenticationController(IMediator mediator) : ApiController
     {
         [AllowAnonymous]

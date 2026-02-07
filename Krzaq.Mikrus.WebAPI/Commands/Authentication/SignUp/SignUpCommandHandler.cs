@@ -11,13 +11,11 @@ namespace Krzaq.Mikrus.WebApi.Commands.Authentication.SignUp
     {
         public async ValueTask<SignUpCommandResult> Handle(SignUpCommand request)
         {
-            var (login, displayName, password) = request;
-
-            if (await userAccess.DoesUserExist(login))
+            if (await userAccess.DoesUserExist(request.Login))
                 throw new ConflictException(ErrorCode.LoginAlreadyInUse);
 
-            var user = await userAccess.CreateUser(login, displayName, password);
-            return new(user);
+            var user = await userAccess.CreateUser(request.Login, request.DisplayName, request.Password);
+            return new() { User = user };
         }
     }
 }

@@ -2,17 +2,9 @@
 
 namespace Krzaq.Mikrus.WebApi.Commands.Authentication.SignIn
 {
-    public readonly record struct SignInCommand(
-        string Login,
-        string Password)
-        : IRequest<SignInCommandResult>
+    public class SignInCommand : IRequest<SignInCommandResult>
     {
-        public void Deconstruct(
-            out string login,
-            out string password)
-        {
-            login = Login;
-            password = Password;
-        }
+        public string Login { get; init; } = string.Empty;
+        public string Password { get; init; } = string.Empty;
     }
 }
