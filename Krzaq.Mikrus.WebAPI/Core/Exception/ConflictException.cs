@@ -3,7 +3,7 @@
 namespace Krzaq.Mikrus.WebApi.Core.Exception
 {
     public class ConflictException(ErrorCode errorCode, System.Exception? innerException = null)
-        : Exceptions.Http.Error.ConflictException<ErrorModel>(new() { Code = errorCode }, innerException)
+        : Exceptions.Http.Error.ConflictException<ErrorModel>(new(errorCode), innerException)
     {
 
     }

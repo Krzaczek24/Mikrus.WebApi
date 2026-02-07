@@ -1,4 +1,5 @@
-﻿using Krzaq.Mikrus.WebApi.Core.Mediators;
+﻿using FluentValidation;
+using Krzaq.Mikrus.WebApi.Core.Mediators;
 using Krzaq.Tools.Reflection;
 
 namespace Krzaq.Mikrus.WebApi.Core.Extensions
@@ -17,7 +18,7 @@ namespace Krzaq.Mikrus.WebApi.Core.Extensions
 
                 string requestName = handlerInterface.GenericTypeArguments[0].FullName!;
 
-                services.AddKeyedSingleton(requestName, handlerInterface);
+                services.AddKeyedSingleton($"{Mediator.HANDLER_PREFIX}_{requestName}", handlerInterface);
                 services.AddTransient(handlerInterface, handler);
             }
 
@@ -26,14 +27,14 @@ namespace Krzaq.Mikrus.WebApi.Core.Extensions
 
         public static IServiceCollection AddValidators(this IServiceCollection services)
         {
-            foreach (Type validator in ReflectionToolbox.GetAllNonAbstractImplementingInterface(typeof(IRequestValidator)))
+            foreach (Type validator in ReflectionToolbox.GetAllNonAbstractImplementingInterface(typeof(IValidator)))
             {
-                var validatorInterface = validator.GetInterface(typeof(IRequestValidator<>).Name)
-                    ?? throw new NullReferenceException($"No {nameof(IRequestValidator)} interface was found for {validator.Name} type");
+                var validatorInterface = validator.GetInterface(typeof(IValidator<>).Name)
+                    ?? throw new NullReferenceException($"No {nameof(IValidator)} interface was found for {validator.Name} type");
 
                 string requestName = validatorInterface.GenericTypeArguments[0].FullName!;
 
-                services.AddKeyedSingleton(requestName, validatorInterface);
+                services.AddKeyedSingleton($"{Mediator.VALIDATOR_PREFIX}_{requestName}", validatorInterface);
                 services.AddTransient(validatorInterface, validator);
             }
 

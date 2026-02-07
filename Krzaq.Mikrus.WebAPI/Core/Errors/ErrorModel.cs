@@ -3,9 +3,14 @@ using System.Text.Json.Serialization;
 
 namespace Krzaq.Mikrus.WebApi.Core.Errors
 {
-    public class ErrorModel : Krzaq.Errors.Model.ErrorModel<ErrorCode>
+    public class ErrorModel(ErrorCode code) : Krzaq.Errors.Model.ErrorModel<ErrorCode>(code)
     {
         [JsonConverter(typeof(EnumToStringConverter<ErrorCode>))]
         public override ErrorCode Code { get; set; }
+
+        public ErrorModel(ErrorCode code, string message) : this(code)
+        {
+            Message = message;
+        }
     }
 }

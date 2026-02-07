@@ -8,10 +8,7 @@ namespace Krzaq.Mikrus.WebApi.Core.Errors
     {
         [Description("An unknown error occurred")]
         Unknown,
-        [Description("At least one of request fields is invalid")]
-        InvalidRequestFieldValue,
-        [Description("Selected login is already used")]
-        LoginAlreadyInUse,
+       
         [Description("Resource has been not found")]
         ResourceNotFound,
         [Description("Already exists resource with that name")]
@@ -20,8 +17,8 @@ namespace Krzaq.Mikrus.WebApi.Core.Errors
         ResourceInUse,
         [Description("Already exists such relation")]
         NonUniqueRelation,
-        [Description("Provided login or pasword is invalid")]
-        InvalidLoginOrPassword,
+
+        // --- authorization ---
         [Description("Failed to authorize")]
         Unauthorized,
         [Description("Insufficient permissions")]
@@ -31,6 +28,17 @@ namespace Krzaq.Mikrus.WebApi.Core.Errors
         [Description("Invalid token")]
         TokenInvalid,
         [Description("Token already exists")]
-        TokenExists
+        TokenExists,
+        // ---------------------
+
+        // --- business cases ---
+        [Description("Request field is missing")]
+        MissingRequestField,
+
+        [Description("Provided login or pasword is invalid")]
+        InvalidLoginOrPassword,
+        [Description("Selected login is already used")]
+        LoginAlreadyInUse,
+        // ----------------------
     }
 }

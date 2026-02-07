@@ -8,6 +8,6 @@ namespace Krzaq.Mikrus.Database.Entities.User
         public virtual string DisplayName { get; set; }
         public virtual string Password { get; set; }
         public virtual DateTime CreateDate { get; set; }
-        public virtual DateTime LastLogin { get; set; }
+        public virtual DateTime? LastLogin { get; set; }
     }
 }

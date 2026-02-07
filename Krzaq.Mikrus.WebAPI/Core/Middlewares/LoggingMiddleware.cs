@@ -1,4 +1,5 @@
-﻿using Krzaq.Exceptions.Http.Base;
+﻿using Krzaq.Converters.EnumToString;
+using Krzaq.Exceptions.Http.Base;
 using Krzaq.Exceptions.Http.Error.Base;
 using Krzaq.Mikrus.WebApi.Core.Errors;
 using Krzaq.Mikrus.WebApi.Core.Extensions;
@@ -11,6 +12,7 @@ namespace Krzaq.Mikrus.WebApi.Core.Middlewares
     public class LoggingMiddleware(RequestDelegate next)
     {
         protected static NLog.ILogger Logger { get; } = LogManager.GetLogger(nameof(LoggingMiddleware));
+        protected static JsonSerializerOptions JsonOpts { get; } = new() { Converters = { new EnumToStringConverter<ErrorCode>() } };
 
         public async Task Invoke(HttpContext httpContext)
         {
@@ -39,7 +41,7 @@ namespace Krzaq.Mikrus.WebApi.Core.Middlewares
             httpContext.Response.Body = responseBody;
             try
             {
-                await next(httpContext);
+                await next.Invoke(httpContext);
             }
             catch (HttpException ex)
             {
@@ -63,7 +65,9 @@ namespace Krzaq.Mikrus.WebApi.Core.Middlewares
         {
             LogException(httpContext, exception);
             httpContext.Response.ContentType = "application/json";
-            await httpContext.Response.WriteAsync(JsonSerializer.Serialize(GetErrorResponse(exception)));
+            var errorResponse = GetErrorResponse(exception);
+            string responseBody = JsonSerializer.Serialize(errorResponse, JsonOpts);
+            await httpContext.Response.WriteAsync(responseBody);
         }
 
         protected virtual void LogRequest(HttpContext httpContext, string bodyText)
@@ -84,17 +88,11 @@ namespace Krzaq.Mikrus.WebApi.Core.Middlewares
             }
         }
 
-        protected virtual object GetErrorResponse(System.Exception exception)
+        protected virtual ErrorResponse GetErrorResponse(System.Exception exception) => exception switch
         {
-            if (exception is HttpErrorException<ErrorModel> ex)
-                return new ErrorResponse(ex.Errors);
-
-            return new ErrorResponse(new ErrorModel()
-            {
-                Code = ErrorCode.Unknown,
-                Message = exception.Message
-            });
-        }
+            HttpErrorException<ErrorModel> ex => new ErrorResponse(ex.Errors),
+            _ => new ErrorResponse([new(ErrorCode.Unknown, exception.Message)])
+        };
     }
 
     public static class MiddlewareHelper
