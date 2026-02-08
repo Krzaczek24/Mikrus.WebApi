@@ -7,7 +7,8 @@ namespace Krzaq.Mikrus.WebApi.Queries.GameRooms
     {
         public async ValueTask<GameRoomsQueryResult> Handle(GameRoomsQuery request)
         {
-            return new() { Rooms = await roomAccess.GetRoomsList(request.GameId) };
+            var rooms = await roomAccess.GetRoomsList(request.GameId);
+            return new GameRoomsQueryResult { Rooms = rooms };
         }
     }
 }

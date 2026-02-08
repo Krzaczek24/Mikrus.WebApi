@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Krzaq.Mikrus.WebApi.Core.Extensions;
+using Krzaq.Mikrus.WebApi.Core.Errors;
 using Krzaq.Mikrus.WebApi.Core.Mediators;
 
 namespace Krzaq.Mikrus.WebApi.Commands.Authentication.SignUp
@@ -9,12 +9,24 @@ namespace Krzaq.Mikrus.WebApi.Commands.Authentication.SignUp
         public SignUpCommandValidator()
         {
             RuleFor(x => x.Login)
-                .Required();
+                .Cascade(CascadeMode.Stop)
+                .NotNull()
+                .NotEmpty()
+                .WithErrorCode(ErrorCode.MissingRequestField)
+                .MaximumLength(64)
+                .WithErrorCode(ErrorCode.ValueTooLong, 64);
+
+            RuleFor(x => x.DisplayName)
+                .MaximumLength(64)
+                .WithErrorCode(ErrorCode.ValueTooLong, 64);
 
             RuleFor(x => x.Password)
                 .Cascade(CascadeMode.Stop)
-                .Required()
-                .Sha512();
+                .NotNull()
+                .NotEmpty()
+                .WithErrorCode(ErrorCode.MissingRequestField)
+                .Matches(@"[a-z0-9]{128}")
+                .WithErrorCode(ErrorCode.InvalidSha512);
         }
     }
 }

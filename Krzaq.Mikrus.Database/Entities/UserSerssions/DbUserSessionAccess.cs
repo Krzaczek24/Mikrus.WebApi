@@ -1,5 +1,4 @@
-﻿using Krzaq.Mikrus.Database.Exceptions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Krzaq.Mikrus.Database.Entities.UserSerssions
 {

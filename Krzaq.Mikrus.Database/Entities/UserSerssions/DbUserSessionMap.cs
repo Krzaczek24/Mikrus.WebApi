@@ -10,6 +10,16 @@ namespace Krzaq.Mikrus.Database.Entities.UserSerssions
         {
             base.Configure(builder);
 
+            builder.Property(e => e.UserId)
+                .HasColumnName("user_id")
+                .IsRequired();
+
+            builder.HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .HasConstraintName("FK_us2_u_user_id")
+                .IsRequired();
+
             builder.Property(e => e.RefreshToken)
                 .HasColumnName("refresh_token")
                 .IsRequired()
@@ -24,12 +34,6 @@ namespace Krzaq.Mikrus.Database.Entities.UserSerssions
                 .HasColumnName("valid_until")
                 .IsRequired()
                 .HasMaxLength(3);
-
-            builder.HasOne(e => e.User)
-                .WithMany()
-                .HasForeignKey("user_id")
-                .HasConstraintName("FK_us2_u_user_id")
-                .IsRequired();
         }
     }
 }

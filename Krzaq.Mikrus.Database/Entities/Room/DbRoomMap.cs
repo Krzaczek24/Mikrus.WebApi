@@ -10,15 +10,23 @@ namespace Krzaq.Mikrus.Database.Entities.Room
         {
             base.Configure(builder);
 
+            builder.Property(e => e.OwnerId)
+                .HasColumnName("owner_id")
+                .IsRequired();
+
             builder.HasOne(e => e.Owner)
                 .WithMany()
-                .HasForeignKey("owner_id")
+                .HasForeignKey(e => e.OwnerId)
                 .HasConstraintName("FK_r_u_owner_id")
+                .IsRequired();
+
+            builder.Property(e => e.GameId)
+                .HasColumnName("game_id")
                 .IsRequired();
 
             builder.HasOne(e => e.Game)
                 .WithMany()
-                .HasForeignKey("game_id")
+                .HasForeignKey(e => e.GameId)
                 .HasConstraintName("FK_r_g_game_id")
                 .IsRequired();
 
@@ -34,9 +42,12 @@ namespace Krzaq.Mikrus.Database.Entities.Room
                 .HasMaxLength(3)
                 .IsRequired();
 
-            builder.Property(e => e.Capacity)
-                .HasColumnName("capacity")
-                .HasDefaultValue(2)
+            builder.Property(e => e.MinPlayers)
+                .HasColumnName("min_players")
+                .IsRequired();
+
+            builder.Property(e => e.MaxPlayers)
+                .HasColumnName("max_players")
                 .IsRequired();
 
             builder.Property(e => e.Name)
@@ -52,8 +63,8 @@ namespace Krzaq.Mikrus.Database.Entities.Room
                 .HasColumnName("guid")
                 .HasMaxLength(36);
 
-            builder.Property(e => e.FriendsWoPassword)
-                .HasColumnName("friends_wo_password")
+            builder.Property(e => e.PassFriends)
+                .HasColumnName("pass_friends")
                 .HasDefaultValue(true)
                 .IsRequired();
         }

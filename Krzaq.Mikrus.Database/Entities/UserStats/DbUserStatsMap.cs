@@ -10,15 +10,23 @@ namespace Krzaq.Mikrus.Database.Entities.UserStats
         {
             base.Configure(builder);
 
+            builder.Property(e => e.UserId)
+                .HasColumnName("user_id")
+                .IsRequired();
+
             builder.HasOne(e => e.User)
                 .WithMany()
-                .HasForeignKey("user_id")
+                .HasForeignKey(e => e.UserId)
                 .HasConstraintName("FK_us_u_user_id")
+                .IsRequired();
+
+            builder.Property(e => e.GameId)
+                .HasColumnName("game_id")
                 .IsRequired();
 
             builder.HasOne(e => e.Game)
                 .WithMany()
-                .HasForeignKey("game_id")
+                .HasForeignKey(e => e.GameId)
                 .HasConstraintName("FK_us_g_game_id")
                 .IsRequired();
 

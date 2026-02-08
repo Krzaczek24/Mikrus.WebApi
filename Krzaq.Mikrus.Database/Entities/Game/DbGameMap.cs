@@ -17,7 +17,16 @@ namespace Krzaq.Mikrus.Database.Entities.Game
 
             builder.Property(e => e.Name)
                 .HasColumnName("name")
-                .HasMaxLength(128);
+                .HasMaxLength(128)
+                .IsRequired();
+
+            builder.Property(e => e.MinPlayers)
+                .HasColumnName("min_players")
+                .IsRequired();
+
+            builder.Property(e => e.MaxPlayers)
+                .HasColumnName("max_players")
+                .IsRequired();
         }
     }
 }

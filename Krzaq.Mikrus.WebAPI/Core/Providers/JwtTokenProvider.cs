@@ -1,5 +1,5 @@
 ﻿using Krzaq.Extensions.String.Notation;
-using Krzaq.Mikrus.Database.Models;
+using Krzaq.Mikrus.Database.Models.Select;
 using Krzaq.Mikrus.WebApi.Core.Authorization;
 using Krzaq.Mikrus.WebApi.Core.Constants;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -10,7 +10,7 @@ namespace Krzaq.Mikrus.WebApi.Core.Providers
 {
     public interface IJwtTokenPovider
     {
-        string GenerateAccessToken(UserDto user);
+        string GenerateAccessToken(SelectUserDto user);
         string GenerateRefreshToken(out DateTime? validUntil);
         bool IsRefreshTokenValid(string refreshToken);
     }
@@ -19,15 +19,15 @@ namespace Krzaq.Mikrus.WebApi.Core.Providers
     {
         private const string DATE_FORMAT = StringFormats.Dates.ISO_8601;
 
-        public string GenerateAccessToken(UserDto user)
+        public string GenerateAccessToken(SelectUserDto user)
         {
             DateTime now = DateTime.UtcNow;
 
             var userClaims = new List<Claim>
             {
                 new CustomClaim(UserClaim.Id, user.Id.ToString()),
-                new CustomClaim(UserClaim.Login, user.Login),
-                new CustomClaim(UserClaim.DisplayName, user.DisplayName),
+                new CustomClaim(UserClaim.Login, user.Login!),
+                new CustomClaim(UserClaim.DisplayName, user.DisplayName ?? string.Empty),
                 //new CustomClaim(UserClaim.Role, user.Role.ToString().ToUpper()),
                 //new CustomClaim(UserClaim.FirstName, user.FirstName ?? string.Empty),
                 //new CustomClaim(UserClaim.LastName, user.LastName ?? string.Empty),

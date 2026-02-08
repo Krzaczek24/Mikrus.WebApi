@@ -10,15 +10,23 @@ namespace Krzaq.Mikrus.Database.Entities.Friend
         {
             base.Configure(builder);
 
+            builder.Property(e => e.UserId)
+                .HasColumnName("user_id")
+                .IsRequired();
+
             builder.HasOne(e => e.User)
                 .WithMany()
-                .HasForeignKey("user_id")
+                .HasForeignKey(e => e.UserId)
                 .HasConstraintName("FK_f_u_user_id")
+                .IsRequired();
+
+            builder.Property(e => e.FriendId)
+                .HasColumnName("friend_user_id")
                 .IsRequired();
 
             builder.HasOne(e => e.Friend)
                 .WithMany()
-                .HasForeignKey("friend_user_id")
+                .HasForeignKey(e => e.FriendId)
                 .HasConstraintName("FK_f_u_friend_user_id")
                 .IsRequired();
         }

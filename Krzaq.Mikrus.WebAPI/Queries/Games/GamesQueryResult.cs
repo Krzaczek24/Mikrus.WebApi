@@ -1,9 +1,9 @@
-﻿using Krzaq.Mikrus.Database.Models;
+﻿using Krzaq.Mikrus.Database.Models.Select;
 
 namespace Krzaq.Mikrus.WebApi.Queries.Games
 {
     public class GamesQueryResult
     {
-        public IReadOnlyCollection<GameDto> Games { get; set; } = [];
+        public IReadOnlyCollection<SelectGameDto> Games { get; init; } = [];
     }
 }

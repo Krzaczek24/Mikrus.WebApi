@@ -2,7 +2,7 @@
 
 namespace Krzaq.Mikrus.WebApi.Queries.GameRooms
 {
-    public class GameRoomsQuery : IRequest<GameRoomsQueryResult>
+    public record class GameRoomsQuery : IRequest<GameRoomsQueryResult>
     {
         public int GameId { get; init; }
     }

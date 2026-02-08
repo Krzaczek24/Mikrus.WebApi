@@ -52,10 +52,10 @@ namespace Krzaq.Mikrus.WebApi.Core.Middlewares
                 httpContext.Response.StatusCode = (int)ex.StatusCode;
                 await HandleException(httpContext, ex);
             }
-            catch (System.Exception exception)
+            catch (System.Exception ex)
             {
                 httpContext.Response.StatusCode = 500;
-                await HandleException(httpContext, exception);
+                await HandleException(httpContext, ex);
             }
 
             httpContext.Response.Body.Seek(0L, SeekOrigin.Begin);

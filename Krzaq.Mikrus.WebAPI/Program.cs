@@ -88,7 +88,10 @@ namespace Krzaq.Mikrus.WebAPI
                 app.UseSwaggerUI(opts => opts.SwaggerEndpoint(ENDPOINT, nameof(WebAPI)));
             }
 
-            app.UseLoggingMiddleware();
+            app.UseWhen(
+                context => !context.Request.Path.StartsWithSegments("/openapi"),
+                app => app.UseLoggingMiddleware()
+            );
 
             app.UseAuthentication();
             app.UseAuthorization();

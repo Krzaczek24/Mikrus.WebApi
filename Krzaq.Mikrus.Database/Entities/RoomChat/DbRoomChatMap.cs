@@ -10,15 +10,23 @@ namespace Krzaq.Mikrus.Database.Entities.RoomChat
         {
             base.Configure(builder);
 
+            builder.Property(e => e.UserId)
+                .HasColumnName("user_id")
+                .IsRequired();
+
             builder.HasOne(e => e.User)
                 .WithMany()
-                .HasForeignKey("user_id")
+                .HasForeignKey(e => e.UserId)
                 .HasConstraintName("FK_rc_u_user_id")
+                .IsRequired();
+
+            builder.Property(e => e.RoomId)
+                .HasColumnName("room_id")
                 .IsRequired();
 
             builder.HasOne(e => e.Room)
                 .WithMany()
-                .HasForeignKey("room_id")
+                .HasForeignKey(e => e.RoomId)
                 .HasConstraintName("FK_rc_r_room_id")
                 .IsRequired();
 

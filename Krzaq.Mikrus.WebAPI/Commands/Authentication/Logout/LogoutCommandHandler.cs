@@ -16,7 +16,7 @@ namespace Krzaq.Mikrus.WebApi.Commands.Authentication.Logout
                 ? httpContextAccessor.GetClientIp()
                 : null;
             await userSessionAccess.RemoveRefreshTokens(login, clientIp);
-            return new();
+            return new LogoutCommandResult();
         }
     }
 }

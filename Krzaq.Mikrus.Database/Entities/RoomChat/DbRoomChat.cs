@@ -6,7 +6,9 @@ namespace Krzaq.Mikrus.Database.Entities.RoomChat
 {
     internal class DbRoomChat : DbTable
     {
+        public virtual int UserId { get; set; }
         public virtual DbUser User { get; set; }
+        public virtual int RoomId { get; set; }
         public virtual DbRoom Room { get; set; }
         public virtual DateTime Timestamp { get; set; }
         public virtual string Message { get; set; }

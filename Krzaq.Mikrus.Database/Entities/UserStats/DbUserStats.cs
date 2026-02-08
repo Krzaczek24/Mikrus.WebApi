@@ -6,7 +6,9 @@ namespace Krzaq.Mikrus.Database.Entities.UserStats
 {
     internal class DbUserStats : DbTable
     {
+        public virtual int UserId { get; set; }
         public virtual DbUser User { get; set; }
+        public virtual int GameId { get; set; }
         public virtual DbGame Game { get; set; }
         public virtual int MatchesCount { get; set; }
         public virtual int WinsCount { get; set; }

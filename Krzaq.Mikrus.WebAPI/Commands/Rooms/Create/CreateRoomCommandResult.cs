@@ -2,5 +2,6 @@
 {
     public class CreateRoomCommandResult
     {
+        public required int RoomId { get; init; }
     }
 }

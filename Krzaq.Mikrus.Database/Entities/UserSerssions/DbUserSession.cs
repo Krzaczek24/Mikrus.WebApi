@@ -5,9 +5,10 @@ namespace Krzaq.Mikrus.Database.Entities.UserSerssions
 {
     internal class DbUserSession : DbTable
     {
+        public virtual int UserId { get; set; }
+        public virtual DbUser User { get; set; }
         public virtual string RefreshToken { get; set; }
         public virtual string ClientIp { get; set; }
         public virtual DateTime? ValidUntil { get; set; }
-        public virtual DbUser User { get; set; }
     }
 }

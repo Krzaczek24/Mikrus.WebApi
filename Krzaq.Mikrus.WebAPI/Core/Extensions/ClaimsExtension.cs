@@ -6,7 +6,7 @@ namespace Krzaq.Mikrus.WebApi.Core.Extensions
 {
     public static class ClaimsExtension
     {
-        public static int GetID(this ClaimsPrincipal claims) => claims.Get<int>(UserClaim.Id);
+        public static int GetId(this ClaimsPrincipal claims) => claims.Get<int>(UserClaim.Id);
         public static string GetLogin(this ClaimsPrincipal claims) => claims.Get(UserClaim.Login)!;
         //public static string GetRole(this ClaimsPrincipal claims) => claims.Get(UserClaim.Role)!;
 
