@@ -9,13 +9,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Krzaq.Mikrus.WebApi.Controllers
 {
-    [ApiController]
     [Route("auth")]
     public class AuthenticationController(IMediator mediator) : ApiController
     {
         [AllowAnonymous]
         [HttpPost("sign-up")]
-        public async ValueTask<SignUpCommandResult> Register([FromBody] SignUpCommand command) => await mediator.Send(command);
+        public async ValueTask<SignUpCommandResult> SignUp([FromBody] SignUpCommand command) => await mediator.Send(command);
 
         [AllowAnonymous]
         [HttpPost("sign-in")]

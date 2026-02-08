@@ -21,11 +21,11 @@ namespace Krzaq.Mikrus.WebApi.Commands.Authentication.SignIn
                 throw new UnauthorizedException(ErrorCode.InvalidLoginOrPassword);
 
             await userAccess.UpdateLastLoginDate(request.Login);
-            var user = (await userAccess.GetUser(request.Login)).Value;
+            var user = await userAccess.GetUser(request.Login);
 
             string refreshToken = tokenProvider.GenerateRefreshToken(out DateTime? validUntil);
             string? clientIp = httpContextAccessor.GetClientIp();
-            var saveRefreshTokenTask = userSessionAccess.SaveNewRefreshToken(user.Login, clientIp, refreshToken, validUntil);
+            var saveRefreshTokenTask = userSessionAccess.SaveNewRefreshToken(user!.Login, clientIp, refreshToken, validUntil);
             string accessToken = tokenProvider.GenerateAccessToken(user);
             await saveRefreshTokenTask;
 

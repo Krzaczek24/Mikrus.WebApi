@@ -6,6 +6,7 @@ using System.Net;
 
 namespace Krzaq.Mikrus.WebApi.Core.Controllers
 {
+    [ApiController]
     [ProducesResponse(HttpStatusCode.OK)]
     [ProducesResponse<ErrorResponse>(HttpStatusCode.BadRequest)]
     [ProducesResponse<ErrorResponse>(HttpStatusCode.Unauthorized)]

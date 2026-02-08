@@ -12,7 +12,11 @@ namespace Krzaq.Mikrus.WebApi.Core.Middlewares
     public class LoggingMiddleware(RequestDelegate next)
     {
         protected static NLog.ILogger Logger { get; } = LogManager.GetLogger(nameof(LoggingMiddleware));
-        protected static JsonSerializerOptions JsonOpts { get; } = new() { Converters = { new EnumToStringConverter<ErrorCode>() } };
+        protected static JsonSerializerOptions JsonOpts { get; } = new()
+        {
+            Converters = { new EnumToStringConverter<ErrorCode>() },
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        };
 
         public async Task Invoke(HttpContext httpContext)
         {

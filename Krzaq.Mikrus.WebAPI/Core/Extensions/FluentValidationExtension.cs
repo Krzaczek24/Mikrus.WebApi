@@ -13,21 +13,19 @@ namespace Krzaq.Mikrus.WebApi.Core.Extensions
                 .WithMessage(message ?? errorCode.GetDescription());
         }
 
-        public static IRuleBuilderOptions<T, TProperty> Required<T, TProperty>(this IRuleBuilderInitial<T, TProperty> builder, string? message = "{0} is required.")
+        public static IRuleBuilderOptions<T, TProperty> Required<T, TProperty>(this IRuleBuilder<T, TProperty> builder, string? message = "Field '{0}' is required.")
         {
             return builder
-                .Cascade(CascadeMode.Stop)
                 .NotNull()
                 .NotEmpty()
                 .WithErrorCode(ErrorCode.MissingRequestField, message);
         }
 
-        public static IRuleBuilderOptions<T, TProperty> Required<T, TProperty>(this IRuleBuilderOptions<T, TProperty> builder, string? message = "{0} is required.")
+        public static IRuleBuilderOptions<T, string> Sha512<T>(this IRuleBuilderOptions<T, string> builder, string? message = "Field '{0}' value is not valid SHA512 string.")
         {
             return builder
-                .NotNull()
-                .NotEmpty()
-                .WithErrorCode(ErrorCode.MissingRequestField, message);
+                .Matches(@"[a-fA-F0-9]{128}")
+                .WithErrorCode(ErrorCode.InvalidSha512Value, message);
         }
     }
 }

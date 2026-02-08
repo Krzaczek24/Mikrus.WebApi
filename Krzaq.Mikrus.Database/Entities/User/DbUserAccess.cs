@@ -27,7 +27,14 @@ namespace Krzaq.Mikrus.Database.Entities.User
             _ = await context.Users.AddAsync(user);
             _ = await context.SaveChangesAsync();
 
-            return new(user.Id, login, displayName, user.CreateDate, user.LastLogin);
+            return new()
+            {
+                Id = user.Id,
+                Login = login,
+                DisplayName = displayName,
+                CreateDate = user.CreateDate,
+                LastLogin = user.LastLogin,
+            };
         }
 
         public async ValueTask UpdateLastLoginDate(string login)

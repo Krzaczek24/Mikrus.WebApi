@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Krzaq.Mikrus.WebApi.Controllers
 {
     [Authorize]
-    [ApiController]
-    [Route("[controller]")]
+    [Route("user")]
     public class UserController : ApiController
     {
         [HttpGet("test")]

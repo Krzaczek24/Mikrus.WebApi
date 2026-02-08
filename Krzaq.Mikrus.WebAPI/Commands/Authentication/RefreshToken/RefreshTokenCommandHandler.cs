@@ -17,13 +17,11 @@ namespace Krzaq.Mikrus.WebApi.Commands.Authentication.RefreshToken
     {
         public async ValueTask<RefreshTokenCommandResult> Handle(RefreshTokenCommand request)
         {
-            string token = request.RefreshToken;
+            if (!tokenProvider.IsRefreshTokenValid(request.RefreshToken))
+                throw new UnauthorizedException(ErrorCode.TokenExpired); 
 
-            if (!tokenProvider.IsRefreshTokenValid(token))
-                throw new UnauthorizedException(ErrorCode.TokenExpired);
-
-            var user = await userAccess.GetUser(token, httpContextAccessor.GetClientIp())
-                ?? throw new UnauthorizedException(ErrorCode.TokenInvalid);
+            var user = await userAccess.GetUser(request.RefreshToken, httpContextAccessor.GetClientIp())
+                ?? throw new UnauthorizedException(ErrorCode.InvalidToken);
 
             string refreshToken = tokenProvider.GenerateRefreshToken(out DateTime? validUntil);
             string? clientIp = httpContextAccessor.GetClientIp();

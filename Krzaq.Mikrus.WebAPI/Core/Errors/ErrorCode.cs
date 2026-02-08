@@ -26,7 +26,7 @@ namespace Krzaq.Mikrus.WebApi.Core.Errors
         [Description("Token expired")]
         TokenExpired,
         [Description("Invalid token")]
-        TokenInvalid,
+        InvalidToken,
         [Description("Token already exists")]
         TokenExists,
         // ---------------------
@@ -39,6 +39,8 @@ namespace Krzaq.Mikrus.WebApi.Core.Errors
         InvalidLoginOrPassword,
         [Description("Selected login is already used")]
         LoginAlreadyInUse,
+        [Description("Provided password is not SHA512 string")]
+        InvalidSha512Value,
         // ----------------------
     }
 }

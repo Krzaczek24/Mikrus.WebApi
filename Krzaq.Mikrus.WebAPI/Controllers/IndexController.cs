@@ -4,8 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Krzaq.Mikrus.WebApi.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
+    [Route("index")]
     public class IndexController : ApiController
     {
         [HttpGet("/")]

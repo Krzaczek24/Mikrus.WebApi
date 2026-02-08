@@ -28,7 +28,7 @@ namespace Krzaq.Mikrus.WebApi.Core.Mediators
                     var errors = result.Errors.Select(e =>
                     {
                         var errorCode = Enum.Parse<ErrorCode>(e.ErrorCode);
-                        return new ErrorModel(errorCode, string.Format(e.ErrorMessage, e.PropertyName));
+                        return new ErrorModel(errorCode, string.Format(e.ErrorMessage, e.PropertyName.ToCamelCase()));
                     });
                     throw new BadRequestException(errors);
                 }

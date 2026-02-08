@@ -1,9 +1,11 @@
 ﻿namespace Krzaq.Mikrus.Database.Models
 {
-    public readonly record struct UserDto(
-        int Id,
-        string Login,
-        string DisplayName,
-        DateTime CreateDate,
-        DateTime? LastLogin);
+    public record class UserDto
+    {
+        public int Id { get; init; }
+        public string Login { get; init; }
+        public string? DisplayName { get; init; }
+        public DateTime CreateDate { get; init; }
+        public DateTime? LastLogin { get; init; }
+    }
 }

@@ -7,6 +7,7 @@ using Krzaq.Mikrus.WebApi.Core.Middlewares;
 using Krzaq.Mikrus.WebApi.Core.Providers;
 using Microsoft.IdentityModel.Tokens;
 using NLog.Extensions.Logging;
+using System.Text.Json;
 
 namespace Krzaq.Mikrus.WebAPI
 {

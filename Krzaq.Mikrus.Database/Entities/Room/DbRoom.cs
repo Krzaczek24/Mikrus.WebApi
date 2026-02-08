@@ -10,7 +10,7 @@ namespace Krzaq.Mikrus.Database.Entities.Room
         public virtual DbGame Game { get; set; }
         public virtual DateTime CreateDate { get; set; }
         public virtual DateTime ExpireDate { get; set; }
-        public int Capacity { get; set; }
+        public virtual int Capacity { get; set; }
         public virtual string Name { get; set; }
         public virtual string? Password { get; set; }
         public virtual Guid? Guid { get; set; }
