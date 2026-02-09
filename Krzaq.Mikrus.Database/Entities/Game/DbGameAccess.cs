@@ -30,20 +30,17 @@ namespace Krzaq.Mikrus.Database.Entities.Game
 
         public async ValueTask<IReadOnlyCollection<SelectGameDto>> GetGamesList(bool? active)
         {
-            var games = await GetGamesQuery(active)
-                .Select(game => new SelectGameDto
-                {
-                    Id = game.Id,
-                    Name = game.Name,
-                })
-                .ToListAsync();
+            var games = await (active switch
+            {
+                null => context.Games,
+                _ => context.Games.Where(g => g.IsActive == active.Value)
+            }).Select(game => new SelectGameDto
+            {
+                Id = game.Id,
+                Name = game.Name,
+            }).ToListAsync();
+
             return games.AsReadOnly();
         }
-
-        private IQueryable<DbGame> GetGamesQuery(bool? active) => active switch
-        {
-            null => context.Games,
-            _ => context.Games.Where(g => g.IsActive == active.Value),
-        };
     }
 }

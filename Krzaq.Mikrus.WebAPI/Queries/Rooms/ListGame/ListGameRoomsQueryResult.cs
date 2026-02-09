@@ -1,8 +1,8 @@
 ﻿using Krzaq.Mikrus.Database.Models.Select;
 
-namespace Krzaq.Mikrus.WebApi.Queries.GameRooms
+namespace Krzaq.Mikrus.WebApi.Queries.Rooms.ListGame
 {
-    public class GameRoomsQueryResult
+    public class ListGameRoomsQueryResult
     {
         public IReadOnlyCollection<SelectRoomDto> Rooms { get; init; } = [];
     }

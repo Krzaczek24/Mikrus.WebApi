@@ -29,7 +29,7 @@ namespace Krzaq.Mikrus.WebApi.Core.Errors
         TokenExists,
         // ---------------------
 
-        // --- business cases ---
+        // --- request fields ---
         [Description("Field '{0}' is required.")]
         MissingRequestField,
         [Description("Field '{0}' value is not unique.")]
@@ -52,7 +52,14 @@ namespace Krzaq.Mikrus.WebApi.Core.Errors
         GreaterThan,
         [Description("Field '{0}' date cannot be from past.")]
         DateFromPast,
-        // ----------------------
+        // -----------------------
+
+        // --- rooms ---
+        [Description("User already joined to selected room")]
+        AlreadyJoinedToRoom,
+        [Description("No free slots in selected room")]
+        RoomHasNoFreeSlots,
+        // -------------
     }
 
     public static class ErrorCodeExtension

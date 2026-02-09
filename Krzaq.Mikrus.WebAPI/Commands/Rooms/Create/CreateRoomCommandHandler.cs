@@ -1,4 +1,5 @@
 ﻿using Krzaq.Extensions.String.Notation;
+using Krzaq.Mikrus.Database;
 using Krzaq.Mikrus.Database.Entities.Game;
 using Krzaq.Mikrus.Database.Entities.Room;
 using Krzaq.Mikrus.Database.Models.Insert;
@@ -11,6 +12,7 @@ namespace Krzaq.Mikrus.WebApi.Commands.Rooms.Create
 {
     public class CreateRoomCommandHandler(
         IHttpContextAccessor httpAccessor,
+        ITransactionManager txMgr,
         IDbGameAccess gameAccess,
         IDbRoomAccess roomAccess)
         : IRequestHandler<CreateRoomCommand, CreateRoomCommandResult>
@@ -27,9 +29,13 @@ namespace Krzaq.Mikrus.WebApi.Commands.Rooms.Create
             if (errors.Count > 0)
                 throw new ConflictException(errors);
 
+            int userId = httpAccessor.GetUser()!.GetId();
+
+            using var tx = await txMgr.BeginTransaction();
+
             var roomParams = new InsertRoomDto
             {
-                OwnerId = httpAccessor.GetUser()!.GetId(),
+                OwnerId = userId,
                 GameId = request.GameId,
                 Name = request.Name,
                 MinPlayers = request.MinPlayers,
@@ -41,7 +47,12 @@ namespace Krzaq.Mikrus.WebApi.Commands.Rooms.Create
             };
 
             int roomId = await roomAccess.CreateRoom(roomParams);
-            return new CreateRoomCommandResult { RoomId = roomId };
+            var result = new CreateRoomCommandResult { RoomId = roomId };
+
+            await roomAccess.JoinRoom(roomId, userId);
+            await tx.CommitAsync();
+
+            return result;
         }
 
         private async ValueTask<IReadOnlyCollection<ErrorModel>> GetGameErrors(CreateRoomCommand request)

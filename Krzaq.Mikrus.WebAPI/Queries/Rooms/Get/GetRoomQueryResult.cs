@@ -1,8 +1,8 @@
 ﻿using Krzaq.Mikrus.Database.Models.Select;
 
-namespace Krzaq.Mikrus.WebApi.Queries.Rooms
+namespace Krzaq.Mikrus.WebApi.Queries.Rooms.Get
 {
-    public class RoomDetailsQueryResult
+    public class GetRoomQueryResult
     {
         public required SelectRoomDetailsDto Room { get; init; }
     }

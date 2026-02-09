@@ -1,4 +1,5 @@
-﻿using Krzaq.Mikrus.Database.Entities.Game;
+﻿using Krzaq.Mikrus.Database.Entities.Friend;
+using Krzaq.Mikrus.Database.Entities.Game;
 using Krzaq.Mikrus.Database.Entities.Room;
 using Krzaq.Mikrus.Database.Entities.User;
 using Krzaq.Mikrus.Database.Entities.UserSerssions;
@@ -34,6 +35,7 @@ namespace Krzaq.Mikrus.Database
 
         public static IServiceCollection AddAppDbAccesses(this IServiceCollection services)
             => services
+                .AddTransient<IDbFriendAccess, DbFriendAccess>()
                 .AddTransient<IDbGameAccess, DbGameAccess>()
                 .AddTransient<IDbRoomAccess, DbRoomAccess>()
                 .AddTransient<IDbUserAccess, DbUserAccess>()
