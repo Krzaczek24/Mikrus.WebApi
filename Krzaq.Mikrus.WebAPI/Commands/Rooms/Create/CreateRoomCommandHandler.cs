@@ -40,19 +40,16 @@ namespace Krzaq.Mikrus.WebApi.Commands.Rooms.Create
                 Name = request.Name,
                 MinPlayers = request.MinPlayers,
                 MaxPlayers = request.MaxPlayers,
-                ExpireDate = request.ExpireDate,
                 Password = request.Password,
                 Guid = request.Guid,
                 PassFriends = request.PassFriends
             };
 
             int roomId = await roomAccess.CreateRoom(roomParams);
-            var result = new CreateRoomCommandResult { RoomId = roomId };
-
             await roomAccess.JoinRoom(roomId, userId);
             await tx.CommitAsync();
 
-            return result;
+            return new CreateRoomCommandResult { RoomId = roomId };
         }
 
         private async ValueTask<IReadOnlyCollection<ErrorModel>> GetGameErrors(CreateRoomCommand request)

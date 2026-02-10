@@ -3,7 +3,7 @@ using Krzaq.Mikrus.Database.Entities.User;
 
 namespace Krzaq.Mikrus.Database.Entities.Friend
 {
-    internal class DbFriend : DbTable
+    public class DbFriend : DbTable
     {
         public virtual int UserId { get; set; }
         public virtual DbUser User { get; set; }

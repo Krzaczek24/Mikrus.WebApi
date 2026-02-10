@@ -15,7 +15,8 @@ namespace Krzaq.Mikrus.Database.Entities.Room
         ValueTask<bool> CanJoinAsOwnerFriend(int roomId, int userId);
         ValueTask<int> GetFreeSlots(int roomId);
         ValueTask<int> CreateRoom(InsertRoomDto roomParams);
-        ValueTask<IReadOnlyCollection<SelectRoomDto>> GetRoomsList(int gameId);
+        ValueTask<IReadOnlyCollection<SelectRoomDto>> GetRoomsList(int? gameId);
+        ValueTask<IReadOnlyCollection<SelectRoomDto>> GetJoinedRoomsList(int userId, int? gameId);
         ValueTask<SelectRoomDetailsDto> GetRoomDetails(int roomId);
         ValueTask JoinRoom(Guid guid, int userId);
         ValueTask JoinRoom(int roomId, int userId);
@@ -47,9 +48,9 @@ namespace Krzaq.Mikrus.Database.Entities.Room
                       select 1).AnyAsync();
 
         public async ValueTask<int> GetFreeSlots(int roomId)
-            => await context.Rooms
+            => await context.RoomsView
                 .Where(r => r.Id == roomId)
-                .GroupJoin(context.RoomPlayers, r => r.Id, rp => rp.RoomId, (r, rp) => r.MaxPlayers - rp.Count())
+                .Select(r => r.MaxPlayers - r.CurrentPlayers)
                 .FirstOrDefaultAsync();
 
         public async ValueTask<int> CreateRoom(InsertRoomDto roomParams)
@@ -61,7 +62,6 @@ namespace Krzaq.Mikrus.Database.Entities.Room
                 Name = roomParams.Name,
                 MinPlayers = roomParams.MinPlayers,
                 MaxPlayers = roomParams.MaxPlayers,
-                ExpireDate = roomParams.ExpireDate,
                 Password = roomParams.Password,
                 Guid = roomParams.Guid,
                 PassFriends = roomParams.PassFriends,
@@ -73,20 +73,38 @@ namespace Krzaq.Mikrus.Database.Entities.Room
             return room.Id;
         }
 
-        public async ValueTask<IReadOnlyCollection<SelectRoomDto>> GetRoomsList(int gameId)
+        public async ValueTask<IReadOnlyCollection<SelectRoomDto>> GetRoomsList(int? gameId)
         {
-            var query = from r in context.Rooms
-                        join u in context.Users on r.Owner equals u
-                        where r.Game.Id == gameId && r.ExpireDate > DateTime.Now
+            var query = from r in context.RoomsView
+                        where (!gameId.HasValue || r.GameId == gameId) && !r.HasGuid
                         select new SelectRoomDto()
                         {
                             Id = r.Id,
+                            OwnerId = r.OwnerId,
+                            OwnerDisplayName = r.OwnerDisplayName,
                             Name = r.Name,
-                            CurrentPlayers = context.RoomPlayers.Count(rp => rp.Room == r),
+                            CurrentPlayers = r.CurrentPlayers,
                             MaxPlayers = r.MaxPlayers,
-                            RequiresPassword = !string.IsNullOrEmpty(r.Password),
-                            OwnerId = u.Id,
-                            OwnerDisplayName = u.DisplayName,
+                            RequiresPassword = r.RequiresPassword,
+                        };
+            var rooms = await query.ToListAsync();
+            return rooms.AsReadOnly();
+        }
+
+        public async ValueTask<IReadOnlyCollection<SelectRoomDto>> GetJoinedRoomsList(int userId, int? gameId)
+        {
+            var query = from r in context.RoomsView
+                        join rp in context.RoomPlayers on r.Id equals rp.Room.Id
+                        where (!gameId.HasValue || r.GameId == gameId) && rp.PlayerId == userId
+                        select new SelectRoomDto()
+                        {
+                            Id = r.Id,
+                            OwnerId = r.OwnerId,
+                            OwnerDisplayName = r.OwnerDisplayName,
+                            Name = r.Name,
+                            CurrentPlayers = r.CurrentPlayers,
+                            MaxPlayers = r.MaxPlayers,
+                            RequiresPassword = r.RequiresPassword,
                         };
             var rooms = await query.ToListAsync();
             return rooms.AsReadOnly();
@@ -106,10 +124,13 @@ namespace Krzaq.Mikrus.Database.Entities.Room
 
         public async ValueTask JoinRoom(int roomId, int userId)
         {
+            var now = DateTime.Now;
             var roomPlayer = new DbRoomPlayer
             {
                 RoomId = roomId,
                 PlayerId = userId,
+                JoinDate = now,
+                LastPing = now,
             };
 
             await context.RoomPlayers.AddAsync(roomPlayer);

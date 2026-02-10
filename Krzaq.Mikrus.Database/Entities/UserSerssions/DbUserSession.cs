@@ -3,7 +3,7 @@ using Krzaq.Mikrus.Database.Entities.User;
 
 namespace Krzaq.Mikrus.Database.Entities.UserSerssions
 {
-    internal class DbUserSession : DbTable
+    public class DbUserSession : DbTable
     {
         public virtual int UserId { get; set; }
         public virtual DbUser User { get; set; }

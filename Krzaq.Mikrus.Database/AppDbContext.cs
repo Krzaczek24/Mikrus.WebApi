@@ -6,15 +6,17 @@ using Krzaq.Mikrus.Database.Entities.RoomPlayer;
 using Krzaq.Mikrus.Database.Entities.User;
 using Krzaq.Mikrus.Database.Entities.UserSerssions;
 using Krzaq.Mikrus.Database.Entities.UserStats;
+using Krzaq.Mikrus.Database.Views.RoomPlayer;
 using Microsoft.EntityFrameworkCore;
 
 namespace Krzaq.Mikrus.Database
 {
-    internal class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
         public virtual DbSet<DbFriend> Friends { get; set; }
         public virtual DbSet<DbGame> Games { get; set; }
         public virtual DbSet<DbRoom> Rooms { get; set; }
+        public virtual DbSet<DbRoomView> RoomsView { get; set; }
         public virtual DbSet<DbRoomChat> RoomChats { get; set; }
         public virtual DbSet<DbRoomPlayer> RoomPlayers { get; set; }
         public virtual DbSet<DbUser> Users { get; set; }

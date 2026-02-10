@@ -2,9 +2,12 @@ using Krzaq.Extensions.String.Notation;
 using Krzaq.Mikrus.Database;
 using Krzaq.Mikrus.Database.Settings;
 using Krzaq.Mikrus.WebApi.Core.Authorization;
+using Krzaq.Mikrus.WebApi.Core.Errors;
 using Krzaq.Mikrus.WebApi.Core.Extensions;
 using Krzaq.Mikrus.WebApi.Core.Middlewares;
 using Krzaq.Mikrus.WebApi.Core.Providers;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using NLog.Extensions.Logging;
 using System.Text.Json;
@@ -51,13 +54,14 @@ namespace Krzaq.Mikrus.WebAPI
             builder.Services.AddTransient<IApiKeyProvider, ApiKeyProvider>();
             builder.Services.AddTransient<IJwtTokenPovider, JwtTokenProvider>();
 
-            builder.Services.AddAuthentication().AddJwtBearer(x => {
+            builder.Services.AddAuthentication().AddJwtBearer(opts =>
+            {
                 var keyProvider = new ApiKeyProvider(builder.Configuration);
 
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.MapInboundClaims = false;
-                x.TokenValidationParameters = new TokenValidationParameters
+                opts.RequireHttpsMetadata = false;
+                opts.SaveToken = true;
+                opts.MapInboundClaims = false;
+                opts.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = keyProvider.GetApiKey(),
@@ -66,6 +70,11 @@ namespace Krzaq.Mikrus.WebAPI
                     //RoleClaimType = UserClaim.Role.ToString().ToCamelCase(),
                     NameClaimType = UserClaim.DisplayName.ToString().ToCamelCase()
                 };
+            });
+
+            builder.Services.ConfigureHttpJsonOptions(opts =>
+            {
+                opts.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             });
 
             builder.Services.AddHttpContextAccessor();
@@ -79,13 +88,19 @@ namespace Krzaq.Mikrus.WebAPI
             builder.Services.AddControllers();
             builder.Services.AddOpenApi(DOC_NAME);
 
+            builder.Services.Configure<ApiBehaviorOptions>(opts =>
+            {
+                opts.SuppressModelStateInvalidFilter = true;
+                opts.SuppressConsumesConstraintForFormFileParameters = true;
+            });
+
             var app = builder.Build();
 
             app.MapOpenApi();
 
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwaggerUI(opts => opts.SwaggerEndpoint(ENDPOINT, nameof(WebAPI)));
+                app.UseSwaggerUI(x => x.SwaggerEndpoint(ENDPOINT, nameof(WebAPI)));
             }
 
             app.UseWhen(

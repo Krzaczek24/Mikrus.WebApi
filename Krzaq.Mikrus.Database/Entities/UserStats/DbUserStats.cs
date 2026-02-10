@@ -4,7 +4,7 @@ using Krzaq.Mikrus.Database.Entities.User;
 
 namespace Krzaq.Mikrus.Database.Entities.UserStats
 {
-    internal class DbUserStats : DbTable
+    public class DbUserStats : DbTable
     {
         public virtual int UserId { get; set; }
         public virtual DbUser User { get; set; }

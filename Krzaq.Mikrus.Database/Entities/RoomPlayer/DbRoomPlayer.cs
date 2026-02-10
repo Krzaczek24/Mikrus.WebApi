@@ -4,7 +4,7 @@ using Krzaq.Mikrus.Database.Entities.User;
 
 namespace Krzaq.Mikrus.Database.Entities.RoomPlayer
 {
-    internal class DbRoomPlayer : DbTable
+    public class DbRoomPlayer : DbTable
     {
         public virtual int PlayerId { get; set; }
         public virtual DbUser Player { get; set; }

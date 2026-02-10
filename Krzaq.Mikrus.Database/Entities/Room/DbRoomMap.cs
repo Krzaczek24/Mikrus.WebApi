@@ -36,12 +36,6 @@ namespace Krzaq.Mikrus.Database.Entities.Room
                 .HasMaxLength(3)
                 .IsRequired();
 
-            builder.Property(e => e.ExpireDate)
-                .HasColumnName("expire_date")
-                .HasDefaultValue()
-                .HasMaxLength(3)
-                .IsRequired();
-
             builder.Property(e => e.MinPlayers)
                 .HasColumnName("min_players")
                 .IsRequired();

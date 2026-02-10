@@ -8,13 +8,13 @@ namespace Krzaq.Mikrus.Database.Base.Tables
     internal abstract class DbTableMap<TDbTable> : IEntityTypeConfiguration<TDbTable>
         where TDbTable : DbTable
     {
+        protected virtual string TableName { get; } = typeof(TDbTable).Name[2..].ToSnakeCase();
+
         public virtual void Configure(EntityTypeBuilder<TDbTable> builder)
         {
-            string tableName = typeof(TDbTable).Name[2..].ToSnakeCase();
+            builder.ToTable(TableName);
 
-            builder.ToTable(tableName);
-
-            builder.HasKey("Id");
+            builder.HasKey(e => e.Id);
             builder.Property(e => e.Id)
                 .HasColumnName("id")
                 .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Throw);

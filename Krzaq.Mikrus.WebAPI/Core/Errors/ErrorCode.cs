@@ -10,11 +10,8 @@ namespace Krzaq.Mikrus.WebApi.Core.Errors
     {
         [Description("An unknown error occurred")]
         Unknown,
-
-        [Description("Resource is used by some other resource")]
-        InUse,
-        [Description("Already exists such relation")]
-        NonUniqueRelation,
+        [Description("Bad request")]
+        BadRequest,
 
         // --- authorization ---
         [Description("Failed to authorize")]
